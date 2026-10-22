@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-10-18 20:40:29 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-10-22 13:12:00 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills`: ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -27,7 +27,7 @@
 | `CLAUDE.md`                 | มีแค่ `@AGENTS.md` เพื่อให้ Claude Code อ่านไฟล์เดียวกับ agent อื่น                     |
 | `ARCHITECTURE.md`           | โครงสร้าง package/module, ที่วางไฟล์, data flow, i18n ownership, API naming, มาตรฐาน UI |
 | `DESIGN.md`                 | token และสเปกภาพของดีไซน์ (ส่วนบน = ของที่ import มา, ส่วนล่าง = override ของโปรเจกต์)  |
-| `docs/*.md`                 | เอกสารเฉพาะเรื่อง เช่น `date-time.md`, `tech-stack.md` อ่านเมื่อแตะงานนั้น              |
+| `docs/*.md`                 | เอกสารเฉพาะเรื่อง เช่น `overview.md`, `date-time.md`, `tech-stack.md` อ่านเมื่อแตะงานนั้น              |
 | `.agents/skills/*/SKILL.md` | ขั้นตอนเฉพาะงาน เช่น สร้าง module, reports, permissions                                 |
 
 ## Skills (`~/.agents/skills`)
@@ -51,4 +51,10 @@
 | vercel-composition-patterns      | compound component, render props, context                                   | ออกแบบ component                          | ✅     | ✅ (symlink) | ❌    | [vercel-composition-patterns](https://skills.sh/vercel-labs/agent-skills/vercel-composition-patterns)        |
 | tdd                              | test-first แบบ red-green-refactor                                           | พูดถึง TDD, ให้ทำ test ก่อน               | ✅     | ✅ (symlink) | ❌    | [tdd](https://skills.sh/mattpocock/skills/tdd)                                                               |
 | reverse-engineer-anything        | วิเคราะห์ย้อนกลับแอป, binary และพฤติกรรม runtime ผ่าน REA                  | ขอ reverse engineer หรือแกะการทำงานแอป   | ✅     | ✅ (symlink) | ❌    | [REA](https://github.com/morluto/rea)                                                                       |
-| short-notes                      | เขียน/แก้โน้ตส่วนตัวแบบ Markdown (cheat sheet, setup, how-to) ในสไตล์ bullet + code สั้น กระชับ | ขอจด/สรุป/เพิ่ม/เขียนโน้ตใหม่            | ✅     | ✅ (symlink) | ❌    | [short-notes](https://github.com/thanaphatpanmas/skills/tree/main/skills/short-notes)                        |
+| short-notes                      | เขียน/แก้โน้ตส่วนตัวแบบ Markdown (cheat sheet, setup, how-to) ในสไตล์ bullet + code สั้น กระชับ | ขอจด/สรุป/เพิ่ม/เขียนโน้ตใหม่            | ✅     | ✅ (symlink) | ❌    | [short-notes](https://github.com/thanaphatpanmas/agents/tree/main/skills/short-notes)                        |
+| commit                           | stage ทุกไฟล์ commit แบบ Conventional Commits จาก diff แล้วถามว่า push ไหม  | `/commit`, "commit and push"              | ✅     | ✅ (symlink) | ❌    | [commit](https://github.com/thanaphatpanmas/agents/tree/main/skills/commit)                                  |
+| workload                         | สรุป git commit ตามช่วงวันที่เป็น workload รายสัปดาห์ เติมให้ครบวันละ 8 ชม. | `/workload`, ลงเวลา/ลงงาน/สรุปงานสัปดาห์  | ✅     | ✅ (symlink) | ❌    | [workload](https://github.com/thanaphatpanmas/agents/tree/main/skills/workload)                              |
+
+## จัดการ skill
+
+ติดตั้งและดูแล skill ด้วย [`npx skills`](https://github.com/vercel-labs/skills)
