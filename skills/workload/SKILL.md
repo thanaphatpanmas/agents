@@ -23,16 +23,17 @@ python3 <skill-dir>/scripts/collect_commits.py --since YYYY-MM-DD --until YYYY-M
 ```
 
 - Prints each day with time, repo, hash, subject, size (+added/-deleted) and the top 3 `areas` touched. An area is the file's directory path with common code-layout folders (`src`, `components`, `services`, `tests`, …) removed, so what's left is mostly the feature name. It's a hint, not the tag.
+- Under each commit, its message body, indented, without `Co-Authored-By`/`Signed-off-by` trailers. Commits made with the `commit` skill (the user's own work, written up by an agent) have a detailed body: why, then a bullet per change, grouped under area labels (`API:`, `Web:`) in big commits. It's the best record of what a commit holds.
 - Matches `git config user.name` across all branches; pass `--author` if commits were made under another name
-- Times are converted to the local timezone. Commits before 05:00 are shifted to the previous day and marked `late-night`, since that's still the previous day's work
+- Times are author times (when the commit was made, even if it was rebased later) in the local timezone. Commits before 05:00 are shifted to the previous day and marked `late-night`, since that's still the previous day's work
 
-Not every commit is work to log. Version bumps, merges, lockfile-only changes and tool-generated commits (agent session checkpoints, auto-saves, often huge or empty) are by-products of the real work around them. Don't give them entries or hours.
+Not every commit is work to log. Version bumps, merges, lockfile-only changes and tool-generated commits (agent session checkpoints, auto-saves, often huge or empty) are by-products of the real work around them. Don't give them entries or hours. Subjects usually follow Conventional Commits (`type(scope): summary`): the scope hints the module, the type the kind of work, and `build(deps)` bumps, release commits and `style` (formatting-only) commits are by-products too.
 
-A commit message can be vague ("wip", "update") or cover several things ("fix login" that also changed report code). When the subject doesn't explain the work, run `git show --stat <sha>` and look at what changed; the entry must describe the actual work, not the message.
+A commit message can be vague ("wip", "update") or cover several things ("fix login" that also changed report code). When the subject and body don't explain the work, run `git show --stat <sha>` and look at what changed; the entry must describe the actual work, not the message.
 
 ## 3. Turn commits into entries
 
-**Tag** `[Mega-Module/Module/Sub-Module]`: the business feature in Title Case, read from `areas`. Areas still contain project-specific folders the script can't know about, such as a workspace/package name (`web`, `server`) or a grouping folder (`settings`, `admin`). Drop those and keep the feature path: `web/sales/order/order-detail` and `server/sales/order/order-detail` → `[Sales/Order/Order Detail]`. Use as many levels as is meaningful (`[Inventory/Stock Movement]`, `[Auth]`). Two related areas in one slot → `[HR/Leave Request, Payroll]`. Non-feature work gets a plain tag like `[Docs]`, `[Research]`, `[UAT dd/mm/yyyy]`. Reuse tags the user already wrote in the draft or in earlier weeks, so the same module is always named the same way.
+**Tag** `[Mega-Module/Module/Sub-Module]`: the business feature in Title Case, read from `areas` and the subject's scope. Areas still contain project-specific folders the script can't know about, such as a workspace/package name (`web`, `server`) or a grouping folder (`settings`, `admin`). Drop those and keep the feature path: `web/sales/order/order-detail` and `server/sales/order/order-detail` → `[Sales/Order/Order Detail]`. Use as many levels as is meaningful (`[Inventory/Stock Movement]`, `[Auth]`). Two related areas in one slot → `[HR/Leave Request, Payroll]`. Non-feature work gets a plain tag like `[Docs]`, `[Research]`, `[UAT dd/mm/yyyy]`. Reuse tags the user already wrote in the draft or in earlier weeks, so the same module is always named the same way.
 
 With several projects, the reader must still tell them apart. The first project the user names is the main one, and its tags are plain module paths (`[Sales/Order]`). Every other project's tags start with its name in Title Case (`[Mobile App/Checkout]`, or just `[Mobile App]`). A slot holds work from one project only.
 
@@ -40,16 +41,16 @@ With several projects, the reader must still tell them apart. The first project 
 - comma-separated verbs/nouns: `CRUD`, `Test, Fix, Detail`, `Re-Design, Query Optimization`
 - one short past-tense phrase: `Added order export to Excel`
 
-The whole entry must fit on one line: keep the task to about 8 words / 60 characters. If a slot covered several things, name the main one, or split them into separate slots. Never cram them into one task. No commit hashes, file names or parentheses.
+The whole entry must fit on one line: keep the task to about 8 words / 60 characters. If a slot covered several things, name the main one, or split them into separate slots. Never cram them into one task. No commit hashes, `type(scope):` prefixes, file names or parentheses.
 
 **Time slots**: a full day is 8h: 08-12 and 13-17, with lunch at 12-13 not counted. If the user's draft or request uses other working hours, follow those instead.
 - Default: two 4h blocks, `(08-12) (4h)` then `(13-17) (4h)`. Morning comes first.
 - Split into 2h/1h blocks only when the user asks for detail, or when one 4h label would hide clearly separate work. Slot hours always equal the range (`(08-10) (2h)`), and a day's slots never overlap.
 - When the draft already has some slots filled, the new slots fill only the hours that are left.
 
-**Allocating work to slots.** A commit's time is when the work was saved, not when it started. A 12:03 commit is the morning's work, an 18:08 commit is the afternoon's, and evening commits belong to that day's slots. Give each block the work closest in time, and give big or complex commits more hours. If a day's commits look thin for 8h, fill the rest with the testing/fixing/detailing that naturally goes with that work (that's how the user writes it), not with invented features.
+**Allocating work to slots.** A commit's time is when the work was saved, not when it started. A 12:03 commit is the morning's work, an 18:08 commit is the afternoon's, and evening commits belong to that day's slots. Give each block the work closest in time, and give big or complex commits more hours. The user often commits once at the end of a session, so one commit can hold a whole morning, afternoon or day: spread it over the slots between the previous commit (or the start of the day) and its own time, splitting it along its body's area labels or bullets. If a day's commits look thin for 8h, fill the rest with the testing/fixing/detailing that naturally goes with that work (that's how the user writes it), not with invented features.
 
-**Days without commits.** Write `Nothing` on weekdays with no commits and no draft entry; don't make up work. List those days in the reply so the user can add meetings or research. Weekend days appear only if they have commits or draft entries.
+**Days without commits.** Write `Nothing` on weekdays with no commits and no draft entry; don't make up work. List those days in the reply so the user can add meetings or research, and say when a big commit on the next working day may include that day's work. Weekend days appear only if they have commits or draft entries.
 
 ## 4. Output format
 

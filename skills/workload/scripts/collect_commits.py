@@ -38,6 +38,8 @@ NOISE_DIRS = {
     # misc
     "scripts", "screenshots", "images",
 }
+# Attribution trailers say who helped, not what was done
+TRAILER = re.compile(r"(co-authored-by|signed-off-by):", re.IGNORECASE)
 WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 SEARCH_DEPTH = 4
 SKIP_SEARCH_DIRS = {"node_modules", "Library", "Applications", "Pictures", "Music", "Movies"}
@@ -83,6 +85,8 @@ def git(repo, *args):
 
 
 def area_of(path):
+    # numstat writes a rename as "dir/{old => new}/file" or "old => new"; the work is at the new path
+    path = re.sub(r"\{[^{}]* => ([^{}]*)\}", r"\1", path).split(" => ")[-1]
     parts = [p for p in Path(path).parent.parts if p.lower() not in NOISE_DIRS]
     if not parts:
         return Path(path).name
@@ -90,32 +94,38 @@ def area_of(path):
 
 
 def read_commits(repo, author, since, until):
+    # The stash ref holds uncommitted work, not commits. --since checks the committer date, which is never
+    # earlier than the author date, so it only bounds the search; the range itself is applied below
     log = git(
-        repo, "log", "--all", "--no-merges", f"--author={author}",
-        f"--since={since.isoformat()}", f"--until={until.isoformat()}",
-        "--date=iso-strict", "--numstat", "--pretty=format:@@%H%x09%ad%x09%s",
+        repo, "log", "--exclude=refs/stash", "--all", "--no-merges", f"--author={author}",
+        f"--since={since.isoformat()}",
+        "--date=iso-strict", "--numstat", "--pretty=format:%x1e%H%x09%ad%x09%s%x1f%b%x1f",
     )
-    commits, current = [], None
-    for line in log.splitlines():
-        if line.startswith("@@"):
-            sha, when, subject = line[2:].split("\t", 2)
-            current = {
-                "repo": Path(repo).resolve().name, "sha": sha[:8], "subject": subject,
-                # Commits may carry any timezone (e.g. UTC "Z"); the work day is the user's local day
-                "when": datetime.fromisoformat(when.replace("Z", "+00:00")).astimezone(),
-                "added": 0, "deleted": 0,
-                "areas": Counter(),
-            }
-            commits.append(current)
+    commits = []
+    for record in log.split("\x1e")[1:]:
+        header, body, numstat = record.split("\x1f", 2)
+        sha, when, subject = header.split("\t", 2)
+        # Commits may carry any timezone (e.g. UTC "Z"); the work day is the user's local day
+        when = datetime.fromisoformat(when.replace("Z", "+00:00")).astimezone()
+        # Author date, not committer date: a rebase days later must not move the work out of its week
+        if not since <= when < until:
             continue
-        m = re.match(r"(\d+|-)\t(\d+|-)\t(.+)", line)
-        if not (m and current):
-            continue
-        added = int(m[1]) if m[1] != "-" else 0
-        deleted = int(m[2]) if m[2] != "-" else 0
-        current["added"] += added
-        current["deleted"] += deleted
-        current["areas"][area_of(m[3])] += added + deleted or 1
+        current = {
+            "repo": Path(repo).resolve().name, "sha": sha[:8], "subject": subject, "when": when,
+            "body": [line for line in body.splitlines() if line.strip() and not TRAILER.match(line)],
+            "added": 0, "deleted": 0,
+            "areas": Counter(),
+        }
+        commits.append(current)
+        for line in numstat.splitlines():
+            m = re.match(r"(\d+|-)\t(\d+|-)\t(.+)", line)
+            if not m:
+                continue
+            added = int(m[1]) if m[1] != "-" else 0
+            deleted = int(m[2]) if m[2] != "-" else 0
+            current["added"] += added
+            current["deleted"] += deleted
+            current["areas"][area_of(m[3])] += added + deleted or 1
     return commits
 
 
@@ -134,8 +144,8 @@ def main():
     args = parser.parse_args()
 
     # Widen the window so late-night commits land on the right day
-    since = datetime.combine(args.since, datetime.min.time()) + timedelta(hours=LATE_NIGHT_CUTOFF_HOUR)
-    until = datetime.combine(args.until + timedelta(days=1), datetime.min.time()) + timedelta(hours=LATE_NIGHT_CUTOFF_HOUR)
+    since = (datetime.combine(args.since, datetime.min.time()) + timedelta(hours=LATE_NIGHT_CUTOFF_HOUR)).astimezone()
+    until = (datetime.combine(args.until + timedelta(days=1), datetime.min.time()) + timedelta(hours=LATE_NIGHT_CUTOFF_HOUR)).astimezone()
 
     by_day, seen = defaultdict(list), set()
     repos = [resolve_repo(r) for r in args.repo] or [Path(".")]
@@ -159,6 +169,8 @@ def main():
             areas = ", ".join(a for a, _ in c["areas"].most_common(3))
             print(f"- {c['when'].strftime('%H:%M')}{late} [{c['repo']}] {c['sha']} {c['subject']}"
                   f"  (+{c['added']}/-{c['deleted']})  areas: {areas}")
+            for line in c["body"]:
+                print(f"    {line}")
         day += timedelta(days=1)
 
 
