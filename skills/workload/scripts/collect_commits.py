@@ -8,13 +8,13 @@ Usage:
 Commits made before 05:00 count toward the previous day (late-night work).
 """
 import argparse
-import os
 import re
 import subprocess
-import sys
 from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
+
+from find_repo import resolve_repo
 
 LATE_NIGHT_CUTOFF_HOUR = 5
 # Common code-layout directory names across ecosystems; they say where code lives, not which feature it is
@@ -41,41 +41,6 @@ NOISE_DIRS = {
 # Attribution trailers say who helped, not what was done
 TRAILER = re.compile(r"(co-authored-by|signed-off-by):", re.IGNORECASE)
 WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-SEARCH_DEPTH = 4
-SKIP_SEARCH_DIRS = {"node_modules", "Library", "Applications", "Pictures", "Music", "Movies"}
-
-
-def normalize(name):
-    # "my-app", "my_app" and "My App" all name the same project
-    return re.sub(r"[\s_.-]", "", name).lower()
-
-
-def find_repos(name, root):
-    target, found = normalize(name), []
-    for dirpath, dirnames, _ in os.walk(root):
-        if os.path.exists(os.path.join(dirpath, ".git")):
-            if normalize(os.path.basename(dirpath)) == target:
-                found.append(dirpath)
-            dirnames.clear()
-            continue
-        if len(Path(dirpath).relative_to(root).parts) >= SEARCH_DEPTH:
-            dirnames.clear()
-            continue
-        dirnames[:] = [d for d in dirnames if not d.startswith(".") and d not in SKIP_SEARCH_DIRS]
-    return found
-
-
-def resolve_repo(value):
-    path = Path(value).expanduser()
-    if path.is_dir():
-        return path
-    root = Path.home()
-    matches = find_repos(value, root)
-    if len(matches) == 1:
-        return Path(matches[0])
-    if not matches:
-        sys.exit(f"No git repo named '{value}' under {root} (depth {SEARCH_DEPTH}); pass its path instead")
-    sys.exit(f"Several repos match '{value}': {', '.join(matches)}; pass the path instead")
 
 
 def git(repo, *args):

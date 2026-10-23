@@ -1,7 +1,7 @@
 ---
 name: commit
-description: Stage every change in the current git repo, write a detailed Conventional Commits message from the actual diff, sized to the change (small, medium or large), then ask whether to commit only or commit and push. Use when the user asks, in any language, to commit, commit and push, or save their work to git, or runs /commit. Not for amending, rebasing, squashing, splitting commits, or opening pull requests.
-argument-hint: "[push|no-push] [notes for the message]"
+description: Stage every change in a git repo (the current one, or a project the user names), write a detailed Conventional Commits message from the actual diff, sized to the change (small, medium or large), then ask whether to commit only or commit and push. Use when the user asks, in any language, to commit, commit and push, or save their work to git, or runs /commit. Not for amending, rebasing, squashing, splitting commits, or opening pull requests.
+argument-hint: "[project name or path] [push|no-push] [notes for the message]"
 ---
 
 # Commit
@@ -10,12 +10,25 @@ The user finishes a working session and wants all of it in one commit, with a me
 
 Reply to the user in their language; write the commit message in English (step 3).
 
-## 1. Check the repo state
+## 1. Pick the project, check the repo state
+
+The project comes first in the request: `/commit web-app push`, "commit mobile-app". With no project named, use the current repo.
+
+- **Path**: use it as is
+- **Name**: look it up. The script finds a git repo folder with that name under the home folder, matching loosely (`mobile-app` = `Mobile App` = `mobile_app`), and prints its path. If it reports no match or several matches, ask the user for the path.
+  ```bash
+  python3 <skill-dir>/scripts/find_repo.py <name>
+  ```
+- **Several projects**: run the whole skill for each in turn, one commit per repo
+
+A word that reads as message notes (`/commit fix the login typo`) is not a project, and `push` / `no-push` never are.
+
+Below, `<repo>` is the project's path, or `.` for the current repo. Pass it to every git command with `-C`, so nothing depends on the shell's working directory.
 
 ```bash
-git status
-git branch --show-current
-git log -n 20 --format='%s'
+git -C <repo> status
+git -C <repo> branch --show-current
+git -C <repo> log -n 20 --format='%s'
 ```
 
 Stop and tell the user, without trying to fix it, when:
@@ -38,15 +51,15 @@ Everything goes in: new files, modifications and deletions, except what must nev
 Before staging, ask about anything on the list that `git status` from step 1 already shows, especially an untracked generated folder such as `?? node_modules/`, which would stage thousands of files. `git status` folds each new folder into one line, so stage and then check every file:
 
 ```bash
-git add -A
-git diff --cached --stat
-git diff --cached
+git -C <repo> add -A
+git -C <repo> diff --cached --stat
+git -C <repo> diff --cached
 ```
 
 1. Check every path in the stat against the list. It lists each file inside new folders and shows binary sizes (`Bin 0 -> 6000000 bytes`).
 2. Read the full diff. If it is very large, go through it file by file or area by area from the stat; lockfiles and generated files only need their names. Watch for secrets inside files too: private key blocks, API keys, tokens, passwords, connection strings with credentials.
 
-Unstage anything that matches with `git reset -q -- <path>` and ask the user per file: leave it out, add it to `.gitignore`, or include it anyway. Never repeat a secret's value in your reply.
+Unstage anything that matches with `git -C <repo> reset -q -- <path>` and ask the user per file: leave it out, add it to `.gitignore`, or include it anyway. Never repeat a secret's value in your reply.
 
 ## 3. Write the message
 
@@ -90,42 +103,42 @@ Skip the question when the request already decides it (`/commit push`, `/commit 
 
 Otherwise ask one question, with AskUserQuestion if available (if not, show the message, ask in chat and wait), showing the full message as the preview of each option:
 
-- **Commit and push**: say where it goes, e.g. "Push `main` to `origin/main`". Leave this option out when the repo has no remote (`git remote` prints nothing) and say why.
+- **Commit and push**: say where it goes, e.g. "Push `main` to `origin/main`". Leave this option out when the repo has no remote (`git -C <repo> remote` prints nothing) and say why.
 - **Commit only**
 
-If the user answers with changes to the message, revise it and ask again. If they cancel, leave the changes staged and tell them `git reset -q` unstages them.
+If the user answers with changes to the message, revise it and ask again. If they cancel, leave the changes staged and tell them `git -C <repo> reset -q` unstages them.
 
 ## 5. Commit
 
 Pass the message through a quoted heredoc so `$`, backticks and line breaks are kept exactly:
 
 ```bash
-git commit -F - <<'EOF'
+git -C <repo> commit -F - <<'EOF'
 <message>
 EOF
 ```
 
 - Never use `--no-verify` or `--amend`, change git config, or turn off commit signing
-- If a hook auto-fixed files (formatter, linter), run `git add -A` and commit again with the same message, once
+- If a hook auto-fixed files (formatter, linter), run `git -C <repo> add -A` and commit again with the same message, once
 - If a hook fails with real errors (tests, type errors, lint it can't fix), or the commit fails for any other reason (signing, missing `user.name`), stop and show the error. Fix code only if the user asks; the changes stay staged
 
 ## 6. Push (if chosen)
 
 ```bash
-git rev-parse --abbrev-ref --symbolic-full-name '@{u}' # fails when there is no upstream
-git push                                               # upstream exists
-git push -u origin <branch>                            # no upstream yet
+git -C <repo> rev-parse --abbrev-ref --symbolic-full-name '@{u}' # fails when there is no upstream
+git -C <repo> push                                               # upstream exists
+git -C <repo> push -u origin <branch>                            # no upstream yet
 ```
 
 - No upstream: push to `origin`, or ask which remote when there are several and none is `origin`
-- Rejected because the remote has new commits: never force-push. Tell the user, and offer `git pull --rebase` followed by `git push`; run it only after they agree. If the rebase hits conflicts, stop and hand back, mentioning `git rebase --abort`
+- Rejected because the remote has new commits: never force-push. Tell the user, and offer `git -C <repo> pull --rebase` followed by `git -C <repo> push`; run it only after they agree. If the rebase hits conflicts, stop and hand back, mentioning `git -C <repo> rebase --abort`
 - Rejected for any other reason (authentication, protected branch, server hook): show the error and stop. The commit stays local
 
 ## 7. Report
 
 Keep it short:
 
-- short hash, branch and subject line
+- short hash, branch and subject line, plus the project when it isn't the current repo
 - pushed to `<remote>/<branch>`, or committed locally only
 - files you excluded, hook auto-fixes, and anything else the user should know
 - the full message, only if the user didn't already see it in step 4
