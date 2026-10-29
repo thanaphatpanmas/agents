@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-10-28 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-10-29 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills`: ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -40,7 +40,6 @@
     <tr><td>commit</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/commit">commit</a></td></tr>
     <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td></tr>
     <tr><td>short-notes</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/short-notes">short-notes</a></td></tr>
-    <tr><td>caveman</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/juliusbrussee/caveman/caveman">caveman</a></td></tr>
     <tr><th colspan="5" align="left">ออกแบบและพัฒนา Frontend</th></tr>
     <tr><td>design-taste-frontend</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/Leonxlnx/taste-skill">taste-skill</a></td></tr>
     <tr><td>impeccable</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/pbakaus/impeccable">impeccable</a></td></tr>
@@ -83,7 +82,6 @@
     <tr><td>commit</td><td>stage ทุกไฟล์ใน repo ปัจจุบันหรือโปรเจกต์ที่ระบุ commit แบบ Conventional Commits จาก diff แล้วให้เลือก commit อย่างเดียวหรือ commit + push</td><td><code>/commit</code>, &quot;commit and push&quot;, สั่ง commit/push เป็นภาษาไหนก็ได้</td></tr>
     <tr><td>workload</td><td>สรุป git commit ตามช่วงวันที่เป็น workload รายสัปดาห์ เติมให้ครบวันละ 8 ชม.</td><td><code>/workload</code>, ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, ส่ง week ที่มีช่อง <code>[]</code> ว่าง</td></tr>
     <tr><td>short-notes</td><td>เขียน/แก้โน้ตส่วนตัว Markdown สไตล์ bullet + code เลือกภาษาไทย/อังกฤษ และระดับ brief/medium/detailed</td><td><code>/short-notes</code>, ขอจด/บันทึก/สรุปลงโน้ต, เพิ่มหรือเขียนโน้ต .md เดิมใหม่</td></tr>
-    <tr><td>caveman</td><td>ตอบสั้นแบบ caveman ลด token เปิดค้างทั้ง session จนพูด &quot;stop caveman&quot; หรือ &quot;normal mode&quot;</td><td><code>/caveman</code>, &quot;caveman mode&quot;, &quot;be brief&quot;, &quot;less tokens&quot;</td></tr>
     <tr><th colspan="3" align="left">ออกแบบและพัฒนา Frontend</th></tr>
     <tr><td>design-taste-frontend</td><td>ออกแบบเว็บ/หน้าแอปไม่ให้ดู generic: เลือก art direction แล้วตรวจผลใน browser จริง</td><td><code>/design-taste-frontend</code>, สร้าง/รีดีไซน์เว็บ, landing page, dashboard, บอกว่าหน้าดู generic/&quot;AI-made&quot;</td></tr>
     <tr><td>impeccable</td><td>ออกแบบและปรับ UI: layout, typography, สี, motion, UX copy, accessibility และ responsive</td><td><code>/impeccable init</code>, <code>/impeccable audit</code>, <code>/impeccable critique</code>, <code>/impeccable polish</code></td></tr>
