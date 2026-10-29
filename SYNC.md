@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-10-25 15:34:59 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-10-28 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills`: ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -109,6 +109,24 @@
     <tr><th colspan="3" align="left">จัดการและสร้าง skill</th></tr>
     <tr><td>find-skills</td><td>ค้นหาและติดตั้ง skill</td><td><code>/find-skills</code>, &quot;find a skill for X&quot;, &quot;is there a skill that...&quot;</td></tr>
     <tr><td>skill-creator</td><td>สร้าง/แก้/วัดผล skill</td><td><code>/skill-creator</code>, อยากสร้างหรือปรับ skill, รัน eval ของ skill</td></tr>
+  </tbody>
+</table>
+
+### ไฟล์และโฟลเดอร์ที่ skill อาจสร้าง
+
+<table>
+  <thead>
+    <tr><th>Skill</th><th>ไฟล์/โฟลเดอร์</th><th>เกิดเมื่อ</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>design-taste-frontend</td><td><code>.taste-skill/</code>, <code>assets/credits.json</code></td><td>เลือก direction, ตรวจหน้าเว็บ หรือดาวน์โหลด assets</td></tr>
+    <tr><td>playwright-cli</td><td><code>.playwright-cli/</code>, screenshot, trace, video</td><td>ใช้ browser CLI แม้เปิดเว็บ UAT</td></tr>
+    <tr><td>brainstorming</td><td><code>.superpowers/brainstorm/</code>, <code>docs/superpowers/specs/</code></td><td>ใช้ visual companion แบบเก็บในโปรเจกต์ หรือเขียน design spec</td></tr>
+    <tr><td>impeccable</td><td><code>.impeccable/</code>, <code>PRODUCT.md</code>, <code>DESIGN.md</code>, hook config</td><td>ใช้ workflow ออกแบบ, live หรือเปิด hooks</td></tr>
+    <tr><td>skill-creator</td><td><code>&lt;skill-name&gt;-workspace/</code>, <code>evals/</code>, <code>*.skill</code></td><td>สร้าง skill, รัน eval หรือ package</td></tr>
+    <tr><td>reverse-engineer-anything</td><td>recovered source, analysis cache, evidence JSON</td><td>recover/export ตามปลายทางที่เลือก</td></tr>
+    <tr><td>context7-cli</td><td><code>.mcp.json</code> หรือ config/rules/skills ของ agent</td><td>ใช้ <code>setup --project</code></td></tr>
+    <tr><td>find-skills</td><td>โฟลเดอร์ skill และไฟล์ติดตั้งของ agent</td><td>ติดตั้งหรือสร้าง skill แบบ project scope</td></tr>
   </tbody>
 </table>
 
