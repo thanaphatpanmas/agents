@@ -2,7 +2,7 @@
 
 > **Last updated:** 2026-10-29 Asia/Bangkok (UTC+07:00)
 
-`~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills`: ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
+`~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills` (แถว AGENTS.md ตรวจ `~/.codex/AGENTS.md`): ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
 ## Instruction file
 
@@ -28,43 +28,49 @@
 
 ## Skills (`~/.agents/skills`)
 
-### Sync
+### Sync และ Token เริ่มต้นต่อ session
 
 <table>
   <thead>
-    <tr><th>Skill</th><th>Agents</th><th>Claude</th><th>Codex</th><th>ลิงก์ติดตั้ง</th></tr>
+    <tr><th>Skill</th><th>Agents</th><th>Claude</th><th>Codex</th><th>ลิงก์ติดตั้ง</th><th>Tokens</th></tr>
   </thead>
   <tbody>
-    <tr><th colspan="5" align="left">วางแผนและจัดการงาน</th></tr>
-    <tr><td>brainstorming</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/obra/superpowers/tree/main/skills/brainstorming">brainstorming</a></td></tr>
-    <tr><td>commit</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/commit">commit</a></td></tr>
-    <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td></tr>
-    <tr><td>short-notes</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/short-notes">short-notes</a></td></tr>
-    <tr><th colspan="5" align="left">ออกแบบและพัฒนา Frontend</th></tr>
-    <tr><td>design-taste-frontend</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/Leonxlnx/taste-skill">taste-skill</a></td></tr>
-    <tr><td>impeccable</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/pbakaus/impeccable">impeccable</a></td></tr>
-    <tr><td>modern-web-guidance</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/googlechrome/modern-web-guidance/modern-web-guidance">modern-web-guidance</a></td></tr>
-    <tr><td>typescript-magician</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mcollina/skills/typescript-magician">typescript-magician</a></td></tr>
-    <tr><td>vercel-react-best-practices</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices">vercel-react-best-practices</a></td></tr>
-    <tr><td>vercel-composition-patterns</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/agent-skills/vercel-composition-patterns">vercel-composition-patterns</a></td></tr>
-    <tr><th colspan="5" align="left">ฐานข้อมูล</th></tr>
-    <tr><td>supabase-postgres-best-practices</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/supabase/agent-skills/supabase-postgres-best-practices">supabase-postgres-best-practices</a></td></tr>
-    <tr><th colspan="5" align="left">คุณภาพ ประสิทธิภาพ และ SEO</th></tr>
-    <tr><td>best-practices</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://officialskills.sh/addyosmani/skills/best-practices">best-practices</a></td></tr>
-    <tr><td>performance</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://officialskills.sh/addyosmani/skills/performance">performance</a></td></tr>
-    <tr><td>seo</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://officialskills.sh/addyosmani/skills/seo">seo</a></td></tr>
-    <tr><th colspan="5" align="left">Debug ทดสอบ และวิเคราะห์ระบบ</th></tr>
-    <tr><td>debug-mantra</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thananon/9arm-skills/blob/main/skills/engineering/debug-mantra/SKILL.md">debug-mantra</a></td></tr>
-    <tr><td>tdd</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mattpocock/skills/tdd">tdd</a></td></tr>
-    <tr><td>playwright-cli</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli">playwright-cli</a></td></tr>
-    <tr><td>reverse-engineer-anything</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/morluto/rea">REA</a></td></tr>
-    <tr><th colspan="5" align="left">ค้นหาเอกสาร</th></tr>
-    <tr><td>find-docs</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/upstash/context7/find-docs">find-docs</a></td></tr>
-    <tr><td>context7-cli</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/upstash/context7/context7-cli">context7-cli</a></td></tr>
-    <tr><td>context7-mcp</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/upstash/context7/context7-mcp">context7-mcp</a></td></tr>
-    <tr><th colspan="5" align="left">จัดการและสร้าง skill</th></tr>
-    <tr><td>find-skills</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/skills/find-skills">find-skills</a></td></tr>
-    <tr><td>skill-creator</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/anthropics/skills/skill-creator">skill-creator</a></td></tr>
+    <tr><th colspan="6" align="left">Instruction file</th></tr>
+    <tr><td>AGENTS.md</td><td>✅ (symlink)</td><td>✅ (symlink)</td><td>✅ (symlink)</td><td><a href="https://github.com/thanaphatpanmas/agents/blob/main/AGENTS.md">AGENTS.md</a></td><td>857</td></tr>
+    <tr><th colspan="6" align="left">วางแผนและจัดการงาน</th></tr>
+    <tr><td>brainstorming</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/obra/superpowers/tree/main/skills/brainstorming">brainstorming</a></td><td>59</td></tr>
+    <tr><td>commit</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/commit">commit</a></td><td>116</td></tr>
+    <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td><td>148</td></tr>
+    <tr><td>short-notes</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/short-notes">short-notes</a></td><td>148</td></tr>
+    <tr><th colspan="6" align="left">ออกแบบและพัฒนา Frontend</th></tr>
+    <tr><td>design-taste-frontend</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/Leonxlnx/taste-skill">taste-skill</a></td><td>243</td></tr>
+    <tr><td>impeccable</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/pbakaus/impeccable">impeccable</a></td><td>143</td></tr>
+    <tr><td>modern-web-guidance</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/googlechrome/modern-web-guidance/modern-web-guidance">modern-web-guidance</a></td><td>284</td></tr>
+    <tr><td>typescript-magician</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mcollina/skills/typescript-magician">typescript-magician</a></td><td>123</td></tr>
+    <tr><td>vercel-react-best-practices</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices">vercel-react-best-practices</a></td><td>85</td></tr>
+    <tr><td>vercel-composition-patterns</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/agent-skills/vercel-composition-patterns">vercel-composition-patterns</a></td><td>75</td></tr>
+    <tr><th colspan="6" align="left">ฐานข้อมูล</th></tr>
+    <tr><td>supabase-postgres-best-practices</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/supabase/agent-skills/supabase-postgres-best-practices">supabase-postgres-best-practices</a></td><td>202</td></tr>
+    <tr><th colspan="6" align="left">คุณภาพ ประสิทธิภาพ และ SEO</th></tr>
+    <tr><td>best-practices</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://officialskills.sh/addyosmani/skills/best-practices">best-practices</a></td><td>65</td></tr>
+    <tr><td>performance</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://officialskills.sh/addyosmani/skills/performance">performance</a></td><td>62</td></tr>
+    <tr><td>seo</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://officialskills.sh/addyosmani/skills/seo">seo</a></td><td>59</td></tr>
+    <tr><th colspan="6" align="left">Debug ทดสอบ และวิเคราะห์ระบบ</th></tr>
+    <tr><td>debug-mantra</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thananon/9arm-skills/blob/main/skills/engineering/debug-mantra/SKILL.md">debug-mantra</a></td><td>117</td></tr>
+    <tr><td>tdd</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mattpocock/skills/tdd">tdd</a></td><td>46</td></tr>
+    <tr><td>playwright-cli</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli">playwright-cli</a></td><td>32</td></tr>
+    <tr><td>reverse-engineer-anything</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/morluto/rea">REA</a></td><td>80</td></tr>
+    <tr><th colspan="6" align="left">ค้นหาเอกสาร</th></tr>
+    <tr><td>find-docs</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/upstash/context7/find-docs">find-docs</a></td><td>185</td></tr>
+    <tr><td>context7-cli</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/upstash/context7/context7-cli">context7-cli</a></td><td>67</td></tr>
+    <tr><td>context7-mcp</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/upstash/context7/context7-mcp">context7-mcp</a></td><td>73</td></tr>
+    <tr><th colspan="6" align="left">จัดการและสร้าง skill</th></tr>
+    <tr><td>find-skills</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/skills/find-skills">find-skills</a></td><td>80</td></tr>
+    <tr><td>skill-creator</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/anthropics/skills/skill-creator">skill-creator</a></td><td>79</td></tr>
+    <tr><th colspan="6" align="left">รวม</th></tr>
+    <tr><td colspan="5">รวม skills 23 ตัว</td><td>2,571</td></tr>
+    <tr><td colspan="5">ข้อความครอบ AGENTS และ mapping path</td><td>31</td></tr>
+    <tr><th colspan="5" align="left">รวมทั้งหมด (ประมาณ, o200k_base)</th><th>3,459</th></tr>
   </tbody>
 </table>
 
