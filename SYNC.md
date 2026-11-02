@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-10-29 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-11-02 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills` (แถว AGENTS.md ตรวจ `~/.codex/AGENTS.md`): ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -131,6 +131,20 @@
     <tr><td>reverse-engineer-anything</td><td>recovered source, analysis cache, evidence JSON</td><td>recover/export ตามปลายทางที่เลือก</td></tr>
     <tr><td>context7-cli</td><td><code>.mcp.json</code> หรือ config/rules/skills ของ agent</td><td>ใช้ <code>setup --project</code></td></tr>
     <tr><td>find-skills</td><td>โฟลเดอร์ skill และไฟล์ติดตั้งของ agent</td><td>ติดตั้งหรือสร้าง skill แบบ project scope</td></tr>
+  </tbody>
+</table>
+
+## MCP
+
+ตรวจด้วย `claude mcp list` และ `codex mcp list` (config อยู่ที่ `~/.claude.json` และ `~/.codex/config.toml`) ไม่นับ connector จาก claude.ai เช่น Claude Docs เพราะไม่ได้ลงในเครื่อง
+
+<table>
+  <thead>
+    <tr><th>MCP</th><th>Claude</th><th>Codex</th><th>ใช้กับ skill</th><th>คำสั่งติดตั้ง</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>REA</td><td>✅</td><td>✅</td><td>reverse-engineer-anything</td><td><code>npx -y rea-agents@latest setup --client claude_code --client codex --skill=false</code> (ใช้กับเว็บ/JS ไม่ต้องลง engine เพิ่ม, <code>--skill=false</code> เพราะ skill มาจาก <code>npx skills</code> อยู่แล้ว)</td></tr>
+    <tr><td>Context7</td><td>❌</td><td>❌</td><td>context7-mcp</td><td>ยังไม่ลง: find-docs และ context7-cli ใช้ <code>npx ctx7</code> ได้โดยไม่ต้องมี MCP</td></tr>
   </tbody>
 </table>
 
