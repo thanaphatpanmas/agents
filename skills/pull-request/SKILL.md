@@ -1,7 +1,7 @@
 ---
 name: pull-request
 description: Open or update a GitHub pull request or GitLab merge request (including self-hosted) for the current branch, choosing the base from the commit graph (main, dev, or a stacked parent) and writing a Conventional Commits title and reviewer-ready description from the whole branch. Use when the user asks, in any language, to open, create or update a PR or MR, ask for review, or runs /pull-request. Not for committing, merging or reviewing PRs.
-argument-hint: "[project name or path] [base branch] [draft|ready] [notes for the description]"
+argument-hint: "[project name or path] [base branch] [draft|ready] [delete-branch] [notes for the description]"
 ---
 
 # Pull Request
@@ -24,7 +24,7 @@ The project comes first in the request: `/pull-request web-app dev draft`. With 
 python3 <skill-dir>/scripts/find_repo.py <name>
 ```
 
-A branch name in the request is the base the user wants, `draft` / `ready` set the PR state, and other words are notes for the description. Below, `<repo>` is the project's path; pass it to every git command with `-C`.
+A branch name in the request is the base the user wants, `draft` / `ready` set the PR state, `delete-branch` (or asking in words to delete the branch after merge) turns on deleting the source branch when the PR merges, and other words are notes for the description. Below, `<repo>` is the project's path; pass it to every git command with `-C`.
 
 ## 2. Gather the facts
 
@@ -75,14 +75,14 @@ Follow `references/templates.md`. The title is a Conventional Commits subject, s
 
 Ask one question, with AskUserQuestion if available (otherwise in chat, and wait). Each option's preview shows the full title and description, and its label names the direction, e.g. "Open PR: `feature/b` → `dev`":
 
-- **Open as ready for review** / **Open as draft**, or **Update PR #12** for an existing one (say if the state or base would change)
+- **Open as ready for review** / **Open as draft**, or **Update PR #12** for an existing one (say if the state or base would change, and whether the source branch will be deleted after merge)
 - When the base is ambiguous or looked wrong, ask for it in the same call, recommended branch first
 
 Skip the question only when the request set `draft` / `ready` and the base is certain. If the user edits the text, revise and ask again; if they cancel, nothing is created.
 
 ## 8. Create or update
 
-Run the create or update command from `cli.md`, passing the description through a temporary file. Attach screenshots where the CLI can. Never merge, approve, enable auto-merge, close, or delete branches. If the command fails, show the error and stop.
+Run the create or update command from `cli.md`, passing the description through a temporary file. Attach screenshots where the CLI can. With `delete-branch`, also set delete-after-merge (`cli.md`, "Delete branch after merge"). Never merge, approve, enable auto-merge, close, or delete branches yourself. If the command fails, show the error and stop.
 
 ## 9. Report
 

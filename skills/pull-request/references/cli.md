@@ -39,6 +39,14 @@ EOF
 - **Screenshots**: on GitLab, attach each file with `--attach <path>` on `glab mr create` (needs a recent glab; if the flag is unknown, skip it). The GitHub CLI can't upload images: list the files in the report so the user can drag them into the PR
 - **Reviewers, assignees, labels**: only when the user names them (`--reviewer`, `--assignee`, `--label` on both CLIs)
 
+## Delete branch after merge
+
+Only with `delete-branch`. Nothing is deleted now; the host removes the source branch when the PR merges.
+
+- **GitLab create**: add `--remove-source-branch=true` to `glab mr create`
+- **GitLab update**: `glab mr update <n> --remove-source-branch` toggles the setting, so first check `glab mr view <n> --output json` and run it only when `force_remove_source_branch` is not already `true`
+- **GitHub**: there is no per-PR setting. Check `gh repo view --json deleteBranchOnMerge`. If it is `false`, tell the user that only the repo-wide setting can do this (`gh repo edit --delete-branch-on-merge`, or Settings → General → "Automatically delete head branches"), and that it affects every PR. Don't change it yourself
+
 ## Setup
 
 What the user needs once per machine, when `pr_context.py` reports the CLI missing or not logged in:
