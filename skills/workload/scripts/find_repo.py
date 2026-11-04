@@ -6,7 +6,7 @@ Usage:
 
 A name is looked up as a git repo folder under the home folder, matching loosely.
 Exits with an error when nothing or several repos match.
-Kept identical in skills/commit and skills/workload, which are installed separately; edit both.
+Kept identical in skills/commit, skills/workload and skills/pull-request, which are installed separately; edit all three.
 """
 import os
 import re

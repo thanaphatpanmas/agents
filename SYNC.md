@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-11-02 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-11-04 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills` (แถว AGENTS.md ตรวจ `~/.codex/AGENTS.md`): ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -143,10 +143,21 @@
     <tr><th>MCP</th><th>Claude</th><th>Codex</th><th>ใช้กับ skill</th><th>คำสั่งติดตั้ง</th></tr>
   </thead>
   <tbody>
-    <tr><td>REA</td><td>✅</td><td>✅</td><td>reverse-engineer-anything</td><td><code>npx -y rea-agents@latest setup --client claude_code --client codex --skill=false</code> (ใช้กับเว็บ/JS ไม่ต้องลง engine เพิ่ม, <code>--skill=false</code> เพราะ skill มาจาก <code>npx skills</code> อยู่แล้ว)</td></tr>
+    <tr><td>REA</td><td>✅</td><td>✅ (ปิดใช้งาน)</td><td>reverse-engineer-anything</td><td><code>npx -y rea-agents@latest setup --client claude_code --client codex --skill=false</code> (ใช้กับเว็บ/JS ไม่ต้องลง engine เพิ่ม, <code>--skill=false</code> เพราะ skill มาจาก <code>npx skills</code> อยู่แล้ว)</td></tr>
     <tr><td>Context7</td><td>❌</td><td>❌</td><td>context7-mcp</td><td>ยังไม่ลง: find-docs และ context7-cli ใช้ <code>npx ctx7</code> ได้โดยไม่ต้องมี MCP</td></tr>
   </tbody>
 </table>
+
+### เปิด/ปิด REA ใน Codex
+
+ติดตั้งไว้แต่ปิดเป็นค่าเริ่มต้นด้วย `enabled = false` ใน section `[mcp_servers.rea]` ของ `~/.codex/config.toml` โดยเก็บค่า `command`, `args` และค่าอื่นเดิมไว้
+
+- เมื่อต้องใช้ `reverse-engineer-anything`: เปลี่ยนเป็น `enabled = true` แล้ว restart แอป/extension ที่ใช้งาน หรือเปิด Codex CLI session ใหม่
+- เมื่อใช้เสร็จ: เปลี่ยนกลับเป็น `enabled = false` แล้วโหลด config ใหม่ด้วยวิธีเดียวกัน
+- Skill ไม่ได้เปิด MCP ที่ถูกปิดให้อัตโนมัติ ต้องเปิดก่อนเรียก tools ของ REA
+- Context7 MCP ยังไม่ติดตั้ง: `find-docs` และ `context7-cli` ใช้ `npx ctx7` ได้โดยไม่ต้องเปิด MCP
+
+อ้างอิง: [OpenAI MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)
 
 ## จัดการ skill
 
