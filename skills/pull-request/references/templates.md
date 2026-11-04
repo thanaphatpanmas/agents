@@ -2,6 +2,31 @@
 
 Every PR uses the same skeleton. Size only decides which parts appear, so a typo fix and a new module still read the same way. When the repo has its own PR/MR template, its sections replace these; the rules for what goes in each still apply.
 
+## Title
+
+Conventional Commits, the same rules as a commit subject. Many teams squash-merge, which turns the PR title into the commit on the base branch.
+
+- `type(scope): summary`, imperative, lower-case verb after the colon, 72 characters at most, no trailing period
+- `type` by the first that applies: `feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `build`, `ci`, `style`, `chore`, `revert`. A feature with its tests is `feat`
+- `scope`: the main module, reusing scopes from `git log`; leave it out when the branch spans many areas
+- A breaking change gets `!` after the type or scope
+- A one-commit branch can reuse that commit's subject
+
+## Description
+
+Covers the whole branch at the depth its size calls for.
+
+- **Why first**: the problem or goal and the approach, from the conversation when you have it. Don't invent motivation
+- **Changes**: what changed, grouped by area for large branches. Name modules, endpoints, commands and config keys, not line edits
+- **Testing**: only what was really run and what it showed, plus steps a reviewer can follow. Never claim a check passed when you don't know; say what wasn't tested
+- **Always call out**: behavior users will notice, migrations, new env vars or config and how to apply them, dependency changes, risks, follow-ups left undone, and merge order for a stacked PR
+- **Keep out**: diff stats, file-by-file trivia, conversation chatter, tool or agent names, secrets and personal data from logs or screenshots
+- **Issue links** (`Closes #123`) only when the number appears in the branch name, commits, conversation or user's notes
+- **Checkboxes** in a repo template: tick only what you verified
+- **Attribution**: add any lines your own instructions require (for example a "Generated with" footer) as the last line
+
+## Skeleton
+
 ```text
 type(scope): summary                       title, all sizes
 

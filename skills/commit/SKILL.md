@@ -63,39 +63,9 @@ Unstage anything that matches with `git -C <repo> reset -q -- <path>` and ask th
 
 ## 3. Write the message
 
-Read `references/templates.md` before writing. It holds the one skeleton every commit uses, how to pick small, medium or large, and examples of each.
+Read `references/templates.md` before writing, and follow it. It holds the rules (Conventional Commits, where a repo's own commitlint or contributing rules win; subject line; body; footer), the one skeleton every commit uses, how to pick small, medium or large, and examples of each.
 
-### Convention
-
-Every repo uses Conventional Commits, so messages look the same across all projects. The rules below already pass commitlint's `config-conventional`.
-
-- If the repo enforces its own rules (a commitlint config such as `commitlint.config.*`, `.commitlintrc*` or a `commitlint` key in `package.json`, or commit rules in `CONTRIBUTING.md`, `AGENTS.md` or `CLAUDE.md`), they win wherever they differ
-- Read recent history only to reuse the scope names already in use, so the same module always gets the same scope
-- Always write in English
-
-### Subject line
-
-- Imperative mood, completing "If applied, this commit will …": `Add`, `Fix`, `Remove`, never `Added` or `Adds`
-- 50 characters or fewer when possible, 72 at most, no trailing period
-- Names the overall outcome, not a list of files
-- Format `type(scope): summary`. The summary starts with a lower-case verb; acronyms and names keep their case (`add CSV export`)
-  - `type`: `feat` new behavior, `fix` bug fix, `perf`, `refactor` (no behavior change), `docs`, `test`, `build` (build system, dependencies), `ci`, `style` (formatting only), `chore` (anything else), `revert`. A commit that mixes kinds takes the first that applies in this order, so a feature with its tests and docs is `feat`
-  - `scope`: the main module or area touched, in lower-case kebab-case (`order-detail`); leave it out when the change spans many areas
-
-### Body
-
-The body must cover everything in the commit, at the depth its size calls for (see the templates). Separate it from the subject with one blank line and wrap lines at 72 characters.
-
-- **Why first**: 1–3 sentences on the problem or goal and the approach taken. Take this from the conversation when you have it; don't invent motivation that neither the diff nor the conversation supports.
-- **Then what**: `- ` bullets for every meaningful change: one flat list for medium, grouped under `Area:` labels for large. Each says what changed and, when it isn't obvious, why. Name modules, functions, endpoints, commands and config keys, not line-level edits.
-- **Always call out**: behavior changes users will notice; new or changed env vars, config or migrations and how to apply them; dependencies added, removed or upgraded (with versions); removed features; known limitations or follow-up work left undone. Put setup steps and limits in the notes paragraph after the bullets.
-- **Keep out**: diff stats, file-by-file trivia, phrases like "this commit", conversation chatter, tool or agent names, emoji (unless the convention uses them). Lockfile and generated changes get one bullet at most.
-
-### Footer
-
-- Breaking change: add `!` after the type or scope and a `BREAKING CHANGE: <what breaks and how to migrate>` footer
-- Issue references (`Refs: #123`, `Closes #123`) only when the number appears in the branch name, the conversation or the user's notes
-- Other trailers, such as `Co-Authored-By`, only when the user's or the agent's own instructions require them
+In short: an English `type(scope): summary` subject in the imperative, then a body that gives the why first and covers every meaningful change at the depth its size calls for.
 
 ## 4. Ask: commit only, or commit and push
 
