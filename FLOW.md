@@ -6,6 +6,7 @@
 
 - story หรือ task list: รัน `/to-spec` (และ `/to-tickets` ถ้างานใหญ่) เองก่อน แล้วสั่ง `/story #<issue>`
 - งานแก้เล็กๆ: สั่ง `/story <สิ่งที่จะแก้>` ได้เลย
+- ให้ agent CLI ช่วยทำ: เติม `cli` ท้ายคำสั่ง เช่น `/story #<issue> cli` (ดูหัวข้อ "ส่งบทให้ agent CLI")
 
 ```mermaid
 flowchart LR
@@ -93,6 +94,23 @@ flowchart LR
 1. `verification-before-completion`: รัน test ทั้งหมดจริงก่อนบอกว่าเสร็จ
 2. `commit`
 3. `pull-request`: แนบ screenshot ด้วย `--attach` และอ้างรูปใน body ด้วย `![alt](./<path>)`
+
+## ส่งบทให้ agent CLI
+
+เติม `cli` ท้ายคำสั่ง แต่ละบทจะไปรันบน CLI ของคุณแบบ headless แทน subagent โดยใช้ login, model และ effort ที่ตั้งไว้ใน CLI ตัวนั้นเอง ถ้าไม่ใส่ `cli` ทุกบทเป็น subagent ตามเดิม
+
+| บท | CLI | เหตุผล |
+| --- | --- | --- |
+| Dev, E2E, Evidence | `claude` | รันคำสั่งบนเครื่องได้ตรงๆ จึงเปิดแอป ต่อ database และเปิด browser ได้ |
+| Security | `codex` | เป็นคนละ model กับตัวที่เขียนโค้ด และการอ่าน diff ไม่ต้องใช้สิ่งที่ sandbox ปิดไว้ |
+
+- **ก่อนใช้**: login ทั้งสองตัวไว้ก่อน ตรวจด้วย `claude auth status` และ `codex login status`
+- **บัญชีแยกสำหรับ `claude`** (ไม่บังคับ): ถ้ามี `~/.claude-cli` บทของ `claude` จะใช้ login ในนั้นแทน login ปกติ ตั้งครั้งเดียวตามหัวข้อ Setup ใน `skills/story/references/cli.md`
+- **ขาดตัวใดตัวหนึ่ง**: `/story` จะถามก่อนทำต่อ ไม่มี `codex` ให้ Security ไป `claude` ไม่มี `claude` ให้ Dev, E2E และ Evidence เป็น subagent ตามเดิม
+- **สิทธิ์ของ `claude`**: แก้ไฟล์ใน repo ได้ และรันได้เฉพาะคำสั่ง test, lint และเปิดแอปที่อยู่ใน brief คำสั่งอื่นถูกปฏิเสธแล้วรายงานกลับมา
+- **ข้อจำกัดของ `codex`**: sandbox เปิด port, ต่อ database และเปิด browser ไม่ได้ test ที่ต้องใช้แอปจึงให้ session หลักรันแทน
+- **ไฟล์**: prompt, คำตอบ และ log ของแต่ละบทอยู่ใน `.story/<issue>-<slug>/cli/`
+- **ทำต่อ**: session id ของแต่ละบทอยู่ใน `progress.md` สั่ง `/story` ซ้ำแล้วทำต่อจาก session เดิมได้
 
 ## กติกา
 

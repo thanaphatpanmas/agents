@@ -1,13 +1,15 @@
 ---
 name: story
 description: Take a spec issue made with /to-spec (and its /to-tickets tickets), or a small fix described in words, all the way to reviewed pull requests - e2e and dev subagents working in parallel from the spec, a fresh security review, screenshots for each acceptance criterion, then commit and PR, one PR per group of related tickets. Run by the user as /story. Not for writing the spec itself (that is /to-spec), reviewing someone else's PR, or merging.
-argument-hint: "[#issue | issue URL | small fix description] [#more-issues]"
+argument-hint: "[#issue | issue URL | small fix description] [#more-issues] [cli]"
 disable-model-invocation: true
 ---
 
 # Story
 
 The user hands over a piece of work and wants it back as pull requests a reviewer can trust: built test-first, checked end to end against the spec, probed for security holes by someone who didn't write the code, and shown working in screenshots. You run the session. You hold the spec and talk to the user; each role goes to a subagent with exactly what it needs, because a subagent knows only its prompt and what's on disk, and can't ask the user anything.
+
+`cli` in the request (or asking in words to hand the work to agent CLIs) sends the roles to the user's `claude` and `codex` CLIs instead of subagents: follow `references/cli.md` wherever a step dispatches or continues an agent.
 
 Reply to the user in their language. Write the spec files, commits and PRs in English unless the repo's recent issues use another language.
 
@@ -17,6 +19,7 @@ Reply to the user in their language. Write the spec files, commits and PRs in En
 | `references/roles/e2e.md`, `references/roles/dev.md`: briefs for the build | step 4 |
 | `references/roles/security.md` | step 5 |
 | `references/roles/evidence.md` | step 6 |
+| `references/cli.md`: roles on the `claude` and `codex` CLIs | steps 1 and 4 to 6, with `cli` |
 
 ## 1. Check the repo
 
@@ -30,7 +33,7 @@ git branch --show-current
 **Resuming**: when `.story/` already has a folder for this issue or fix, an earlier run stopped partway. Read its `spec.md` and `progress.md` and continue from the step after the last one recorded, skipping step 2.
 
 - Uncommitted changes on the branch `progress.md` names are the work in progress, so the clean-tree stop below doesn't apply. On any other branch, ask before switching
-- The earlier subagents are gone. Dispatch new ones with the same briefs, and tell them to read what is already there before writing
+- The earlier subagents are gone. Dispatch new ones with the same briefs, and tell them to read what is already there before writing. CLI sessions recorded in `progress.md` are still there, so continue those instead (`references/cli.md`)
 - If every group already has a PR, there is nothing left: report the PRs and stop
 
 Stop and tell the user when:
@@ -38,6 +41,7 @@ Stop and tell the user when:
 - it isn't a git repo, or a merge or rebase is in progress
 - on a fresh start, the tree has uncommitted changes: `commit` stages everything at the end, so they would land in the PR. Ask whether to commit or stash them first
 - the input is an issue and `docs/agents/issue-tracker.md` is missing: ask the user to run `/setup-matt-pocock-skills` once
+- the request has `cli` and one of the CLIs is missing or logged out (the check is in `references/cli.md`): ask whether to go on without it
 
 Then:
 
@@ -88,14 +92,14 @@ git switch -c <type>/<issue>-<short-name> <base>   # type: feat or fix; a group 
 
 The issue number in the branch name lets `pull-request` add `Closes #<n>`.
 
-Dispatch both subagents in one message (Claude Code: the Agent tool), each with its brief filled in:
+Dispatch both subagents in one message (Claude Code: the Agent tool; with `cli`: `references/cli.md`), each with its brief filled in:
 
 - **E2E agent** (`references/roles/e2e.md`): writes e2e tests from the spec only, inside the Playwright test directory from `playwright.config.*`. If the project has no Playwright setup, ask the user before adding it: it's a new dependency
 - **Dev agent** (`references/roles/dev.md`): builds it with `tdd`, unit and integration tests at the approved seams, and owns every file outside the e2e directory
 
 When both have reported, run the full suite yourself: unit, integration and e2e.
 
-- Failures go back to the same Dev agent with the failing output, continued rather than restarted so it keeps its context (Claude Code: SendMessage)
+- Failures go back to the same Dev agent with the failing output, continued rather than restarted so it keeps its context (Claude Code: SendMessage; with `cli`: resume its session)
 - A test that contradicts the spec goes back to the agent that wrote it. If the spec doesn't settle who is right, ask the user
 - After 3 rounds that still fail, stop and show the user what is failing
 

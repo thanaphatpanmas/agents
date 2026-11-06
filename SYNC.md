@@ -48,7 +48,7 @@
     <tr><td>to-spec</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mattpocock/skills/to-spec">to-spec</a></td><td>43</td><td>632</td></tr>
     <tr><td>to-tickets</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mattpocock/skills/to-tickets">to-tickets</a></td><td>68</td><td>1,270</td></tr>
     <tr><td>setup-matt-pocock-skills</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mattpocock/skills/setup-matt-pocock-skills">setup-matt-pocock-skills</a></td><td>63</td><td>1,873</td></tr>
-    <tr><td>story</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/story">story</a></td><td>115</td><td>2,267</td></tr>
+    <tr><td>story</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/story">story</a></td><td>115</td><td>2,445</td></tr>
     <tr><td>commit</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/commit">commit</a></td><td>116</td><td>1,940</td></tr>
     <tr><td>pull-request</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/pull-request">pull-request</a></td><td>115</td><td>1,581</td></tr>
     <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td><td>148</td><td>2,043</td></tr>
@@ -143,7 +143,7 @@
     <tr><td>design-taste-frontend</td><td><code>.taste-skill/</code>, <code>assets/</code> (คัดลอกจาก skill รวม <code>assets/img/credits.json</code> และ <code>assets/icons/icons-credits.json</code>), <code>shots/</code>, <code>names.json</code></td><td>สร้างหน้าเว็บ ดึงรูปหรือ icon และตรวจหน้าเว็บ</td></tr>
     <tr><td>playwright-cli</td><td><code>.playwright-cli/</code>, screenshot, trace, video</td><td>ใช้ browser CLI แม้เปิดเว็บ UAT</td></tr>
     <tr><td>setup-matt-pocock-skills</td><td><code>docs/agents/issue-tracker.md</code>, <code>docs/agents/domain.md</code></td><td>ตั้งค่า repo ครั้งแรก</td></tr>
-    <tr><td>story</td><td><code>.story/&lt;issue&gt;-&lt;slug&gt;/</code> (spec, progress, screenshot, evidence), บรรทัด <code>.story/</code> และ output ของ Playwright ใน <code>.git/info/exclude</code></td><td>เริ่ม <code>/story</code> ใน repo</td></tr>
+    <tr><td>story</td><td><code>.story/&lt;issue&gt;-&lt;slug&gt;/</code> (spec, progress, screenshot, evidence และ prompt, คำตอบ, log ของ CLI เมื่อใช้ <code>cli</code>), บรรทัด <code>.story/</code> และ output ของ Playwright ใน <code>.git/info/exclude</code></td><td>เริ่ม <code>/story</code> ใน repo</td></tr>
     <tr><td>to-spec, to-tickets</td><td><code>.scratch/&lt;feature&gt;/</code></td><td>เลือก issue tracker แบบไฟล์ local (ถ้าเลือก GitHub/GitLab จะสร้างเป็น issue แทน)</td></tr>
     <tr><td>impeccable</td><td><code>.impeccable/</code>, <code>PRODUCT.md</code>, <code>DESIGN.md</code>, hook config</td><td>ใช้ workflow ออกแบบ, live หรือเปิด hooks</td></tr>
     <tr><td>skill-creator</td><td><code>&lt;skill-name&gt;-workspace/</code>, <code>evals/</code>, <code>*.skill</code></td><td>สร้าง skill, รัน eval หรือ package</td></tr>
