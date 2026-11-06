@@ -36,7 +36,9 @@ EOF
 | Update | `gh pr edit <n> --title '<title>' --body-file "$body" [--base <base>]` | `glab mr update <n> --title '<title>' --description-file "$body" [--target-branch <base>] --yes` |
 | Draft ↔ ready | `gh pr ready <n>` / `gh pr ready <n> --undo` | `glab mr update <n> --ready` / `--draft` |
 
-- **Screenshots**: on GitLab, attach each file with `--attach <path>` on `glab mr create` (needs a recent glab; if the flag is unknown, skip it). The GitHub CLI can't upload images: list the files in the report so the user can drag them into the PR
+- **Screenshots**: add `--attach ./<path>` per file to the create or update command. Commands run from the repo, so `<path>` is relative to it. If the CLI rejects the flag (`gh` before 2.99, an older `glab`), leave it off and list the files in the report so the user can drag them into the PR
+  - **GitHub**: also place each image in the description as `![alt](./<path>)`, the same path as its `--attach`; `gh` replaces it with the uploaded URL. If some uploads fail, `gh` still creates or updates the PR and exits non-zero: don't run it again, and list the failed files in the report
+  - **GitLab**: `glab` appends each file to the description itself (the flag is experimental there), so don't reference them in the body
 - **Reviewers, assignees, labels**: only when the user names them (`--reviewer`, `--assignee`, `--label` on both CLIs)
 
 ## Delete branch after merge

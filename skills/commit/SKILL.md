@@ -52,12 +52,15 @@ Before staging, ask about anything on the list that `git status` from step 1 alr
 
 ```bash
 git -C <repo> add -A
-git -C <repo> diff --cached --stat
-git -C <repo> diff --cached
+git -C <repo> diff --cached --stat=1000
 ```
 
-1. Check every path in the stat against the list. It lists each file inside new folders and shows binary sizes (`Bin 0 -> 6000000 bytes`).
-2. Read the full diff. If it is very large, go through it file by file or area by area from the stat; lockfiles and generated files only need their names. Watch for secrets inside files too: private key blocks, API keys, tokens, passwords, connection strings with credentials.
+1. Check every path in the stat against the list before reading any diff. It lists each file inside new folders and shows binary sizes (`Bin 0 -> 6000000 bytes`); the width keeps deep paths whole, where the default cuts them to `.../file` and hides a folder like `dist/`. A text file adding tens of thousands of lines (a database dump, an export, a minified bundle) is as heavy as a large binary: treat it the same way.
+2. Then read the diff, leaving out lockfiles, generated files and anything step 1 flagged; those only need their names, and one dump can run to hundreds of thousands of lines:
+   ```bash
+   git -C <repo> diff --cached -- . ':(exclude)<path>'   # one ':(exclude)…' per path; plain `diff --cached` when there are none
+   ```
+   If it is still very large, go through it file by file or area by area from the stat. Watch for secrets inside files too: private key blocks, API keys, tokens, passwords, connection strings with credentials.
 
 Unstage anything that matches with `git -C <repo> reset -q -- <path>` and ask the user per file: leave it out, add it to `.gitignore`, or include it anyway. Never repeat a secret's value in your reply.
 
@@ -95,12 +98,13 @@ EOF
 ## 6. Push (if chosen)
 
 ```bash
-git -C <repo> rev-parse --abbrev-ref --symbolic-full-name '@{u}' # fails when there is no upstream
-git -C <repo> push                                               # upstream exists
-git -C <repo> push -u origin <branch>                            # no upstream yet
+git -C <repo> rev-parse --abbrev-ref --symbolic-full-name '@{u}' # prints <remote>/<name>; fails when there is no upstream
+git -C <repo> push                                               # upstream is <remote>/<branch>
+git -C <repo> push -u <remote> <branch>                          # no upstream, or one with another name
 ```
 
 - No upstream: push to `origin`, or ask which remote when there are several and none is `origin`
+- Upstream with another name: a branch cut with `git switch -c feat origin/main` tracks `main`, so plain `git push` fails, and git's hint to push `HEAD:main` would put the work straight on the base branch. Push to the branch's own name on that remote with `-u` instead
 - Rejected because the remote has new commits: never force-push. Tell the user, and offer `git -C <repo> pull --rebase` followed by `git -C <repo> push`; run it only after they agree. If the rebase hits conflicts, stop and hand back, mentioning `git -C <repo> rebase --abort`
 - Rejected for any other reason (authentication, protected branch, server hook): show the error and stop. The commit stays local
 

@@ -41,6 +41,7 @@ Depends on #12, which must merge first.    stacked PRs only
 - Not tested: ...
 
 ## Screenshots                             UI changes only
+![Settings page after saving](./<path>)    GitHub: one per image, same path as its `--attach` (cli.md); GitLab: none, glab appends them
 
 ## Notes                                   only when needed: migrations, config, risks, follow-ups
 
@@ -98,7 +99,8 @@ in progress or already closed.
 - Not tested: mobile layouts
 
 ## Screenshots
-Ringed screenshots of each disabled button and its tooltip are attached.
+![Edit and Delete disabled with a tooltip while the round runs](./screenshots/form-detail-locked.png)
+![Save disabled with a tooltip after the round closes](./screenshots/committee-closed.png)
 
 ## Notes
 The server still accepts participant/committee changes after a round
