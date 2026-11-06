@@ -51,7 +51,7 @@
     <tr><td>story</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/story">story</a></td><td>115</td><td>2,445</td></tr>
     <tr><td>commit</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/commit">commit</a></td><td>116</td><td>1,940</td></tr>
     <tr><td>pull-request</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/pull-request">pull-request</a></td><td>115</td><td>1,581</td></tr>
-    <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td><td>148</td><td>2,043</td></tr>
+    <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td><td>149</td><td>2,528</td></tr>
     <tr><td>short-notes</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/short-notes">short-notes</a></td><td>148</td><td>1,032</td></tr>
     <tr><th colspan="7" align="left">ออกแบบและพัฒนา Frontend</th></tr>
     <tr><td>design-taste-frontend</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/Leonxlnx/taste-skill">taste-skill</a></td><td>199</td><td>5,507</td></tr>
@@ -79,9 +79,9 @@
     <tr><td>find-skills</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/skills/find-skills">find-skills</a></td><td>80</td><td>1,303</td></tr>
     <tr><td>skill-creator</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/anthropics/skills/skill-creator">skill-creator</a></td><td>79</td><td>7,241</td></tr>
     <tr><th colspan="7" align="left">รวม</th></tr>
-    <tr><td colspan="5">รวม skills 29 ตัว</td><td>2,902</td><td>—</td></tr>
+    <tr><td colspan="5">รวม skills 29 ตัว</td><td>2,903</td><td>—</td></tr>
     <tr><td colspan="5">ข้อความครอบ AGENTS และ mapping path</td><td>31</td><td>—</td></tr>
-    <tr><th colspan="5" align="left">รวมทั้งหมด (ประมาณ, o200k_base)</th><th>3,790</th><th>—</th></tr>
+    <tr><th colspan="5" align="left">รวมทั้งหมด (ประมาณ, o200k_base)</th><th>3,791</th><th>—</th></tr>
   </tbody>
 </table>
 
@@ -100,10 +100,10 @@
     <tr><td>to-spec</td><td>เขียน spec จากที่คุยกันมา ร่าง seam ให้ยืนยัน แล้วลง issue tracker</td><td><code>/to-spec</code> เท่านั้น</td></tr>
     <tr><td>to-tickets</td><td>แตก spec หรือแผนเป็น ticket แบบ vertical slice พร้อมลำดับที่ต้องรอกัน แล้วลง issue tracker</td><td><code>/to-tickets</code> เท่านั้น</td></tr>
     <tr><td>setup-matt-pocock-skills</td><td>ตั้งค่า repo ให้ <code>to-spec</code> และ <code>to-tickets</code>: issue tracker (GitHub, GitLab หรือไฟล์ local), label และที่เก็บเอกสาร domain</td><td><code>/setup-matt-pocock-skills</code> เท่านั้น รันครั้งเดียวต่อ repo</td></tr>
-    <tr><td>story</td><td>พา spec จาก <code>to-spec</code> (หรืองานแก้เล็กๆ) ไปจนเปิด PR: เติม acceptance criteria ให้ E2E agent กับ Dev agent ทำพร้อมกัน ให้ Security agent ตัวใหม่หาช่องโหว่ ถ่าย screenshot ตาม criteria แล้ว commit + PR ทีละกลุ่ม ticket (ขั้นตอนอยู่ใน <code>FLOW.md</code>)</td><td><code>/story #&lt;issue&gt;</code> หรือ <code>/story &lt;สิ่งที่จะแก้&gt;</code> เท่านั้น</td></tr>
+    <tr><td>story</td><td>พา spec จาก <code>to-spec</code> (หรืองานแก้เล็กๆ) ไปจนเปิด PR: เติม acceptance criteria ให้ E2E agent กับ Dev agent ทำพร้อมกัน ให้ Security agent ตัวใหม่หาช่องโหว่ ถ่าย screenshot ตาม criteria แล้ว commit + PR ทีละกลุ่ม ticket (ขั้นตอนอยู่ใน <code>docs/skills/story.md</code>)</td><td><code>/story #&lt;issue&gt;</code> หรือ <code>/story &lt;สิ่งที่จะแก้&gt;</code> เท่านั้น</td></tr>
     <tr><td>commit</td><td>stage ทุกไฟล์ใน repo ปัจจุบันหรือโปรเจกต์ที่ระบุ commit แบบ Conventional Commits จาก diff แล้วให้เลือก commit อย่างเดียวหรือ commit + push</td><td><code>/commit</code>, &quot;commit and push&quot;, สั่ง commit/push เป็นภาษาไหนก็ได้</td></tr>
     <tr><td>pull-request</td><td>เปิดหรืออัปเดต PR (GitHub) / MR (GitLab รวม self-hosted) ของ branch ปัจจุบัน เลือก base จากผัง commit (main, dev, branch แม่ของ stacked) เขียนชื่อแบบ Conventional Commits และคำอธิบายจากทุก commit แล้วถามก่อนสร้าง (ต้องมี <code>gh</code>/<code>glab</code>)</td><td><code>/pull-request</code>, เปิด PR, สร้าง MR, ขอ merge, ส่งรีวิว</td></tr>
-    <tr><td>workload</td><td>สรุป git commit ตามช่วงวันที่เป็น workload รายสัปดาห์ เติมให้ครบวันละ 8 ชม.</td><td><code>/workload</code>, ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, ส่ง week ที่มีช่อง <code>[]</code> ว่าง</td></tr>
+    <tr><td>workload</td><td>สรุป git commit และ PR ตามช่วงวันที่เป็น workload รายสัปดาห์ บรรทัดละงาน ไม่ใส่เวลาหรือชั่วโมง วันที่ไม่มี commit จะเดาจากงานรอบข้างแล้วติด <code>(?)</code> ไว้ให้ตรวจ</td><td><code>/workload</code>, ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, ส่ง week ที่มีช่อง <code>[]</code> ว่าง</td></tr>
     <tr><td>short-notes</td><td>เขียน/แก้โน้ตส่วนตัว Markdown สไตล์ bullet + code เลือกภาษาไทย/อังกฤษ และระดับ brief/medium/detailed</td><td><code>/short-notes</code>, ขอจด/บันทึก/สรุปลงโน้ต, เพิ่มหรือเขียนโน้ต .md เดิมใหม่</td></tr>
     <tr><th colspan="3" align="left">ออกแบบและพัฒนา Frontend</th></tr>
     <tr><td>design-taste-frontend</td><td>สร้างเว็บบริษัท สินค้า หรือร้านค้าไม่ให้ดู generic (v2.5): เขียน copy ก่อน วางหน้าเป็นจอ สุ่ม palette และ hero ด้วย script แล้วตรวจใน headless Chrome (ต้องมี Node 22+ และ Chrome) ไม่ครอบคลุม dashboard/หน้าแอปแล้ว (ใช้ <code>impeccable</code>)</td><td><code>/design-taste-frontend</code>, สร้าง/รีดีไซน์ landing page, เว็บบริษัท สินค้า ร้านค้า SaaS หรือเกม, บอกว่าหน้าดู generic/&quot;AI-made&quot;</td></tr>
