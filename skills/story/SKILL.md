@@ -123,15 +123,15 @@ Then run `git add -N .` again, for the tests and fixes just added, review the cu
 
 ## 6. Evidence
 
-Skip this when nothing in the UI changed. Otherwise dispatch the Evidence agent with `references/roles/evidence.md`. It starts the app, takes one screenshot per UI acceptance criterion into `.story/<slug>/screenshots/`, and writes `.story/<slug>/evidence.md`: criterion → test → result → screenshot.
+Skip this when nothing in the UI changed. Otherwise dispatch the Evidence agent with `references/roles/evidence.md`. It starts the app, takes one annotated screenshot per UI acceptance criterion — a caption bar naming the AC, the proving element ringed when one exists — into `.story/<slug>/screenshots/`, and writes `.story/<slug>/evidence.md`: criterion → test → result → screenshot.
 
-Look at every screenshot before it goes into a PR, and drop any that shows secrets or personal data.
+Look at every screenshot before it goes into a PR: drop any that shows secrets or personal data, and send one whose ring or caption marks the wrong spot back to the Evidence agent.
 
 ## 7. Ship
 
 1. `verification-before-completion`: run the full suite fresh and read the output before claiming anything passes
 2. `commit`
-3. `pull-request`. Tell it the issues to close (one `Closes #<n>` per ticket in the group), give it the evidence table for Testing, and list the screenshot paths to attach. For a group blocked by the previous one, the base is that group's branch
+3. `pull-request`. Tell it the issues to close (one `Closes #<n>` per ticket in the group), give it the evidence table for Testing and the screenshot paths, and have it embed each image under its own criterion with `<AC id> — <criterion>` as alt text: `.story/` is excluded from git, so a path left as text is a dead link, and an unreferenced attachment just piles up at the end of the PR. For a group blocked by the previous one, the base is that group's branch
 
 ## 8. Report
 
