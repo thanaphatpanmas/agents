@@ -50,6 +50,9 @@ The test: every changed line should trace directly to the user's request.
 - Handle errors at system boundaries (user input, I/O, external APIs). No error handling or fallbacks for scenarios that can't happen.
 - Preserve existing validation, error handling, security, and accessibility behavior.
 - Validate untrusted input; use parameterized queries and context-aware output encoding (OWASP Top 10).
+- Design every data path for production volume: assume any collection that grows with usage will reach 1,000,000 rows, whether it lives in a database, behind an API or in a local store. Bounded data access is correctness, not a speculative feature; YAGNI never removes it.
+- Never hold, filter, sort, count or aggregate a whole collection in application code. Request pages with a capped page size from whatever owns the data and let it filter and sort; in the UI, lists paginate, infinite-scroll or virtualize. An unbounded request, or an arbitrary cap such as "fetch 1000 and assume that is everything", is a bug. When an API you do not control cannot page, report the limit instead of loading everything silently.
+- Only sets that cannot grow with usage may load whole: enums and `as const` lists in code, or catalogs bounded by design and confirmed by a total count. Anything users create is open-ended, however few rows exist today.
 - Never hardcode, log, or commit secrets, tokens, or personal data.
 - Ask before destructive or irreversible actions (`rm -rf`, `git reset --hard`, force-push, dropping data).
 
@@ -73,4 +76,4 @@ For multi-step tasks, state a brief plan:
 3. [Step] → verify: [check]
 ```
 
-When done, briefly state what changed, what wasn't verified, and any known limitations or risks.
+When done, briefly state what changed, what wasn't verified, and any known limitations or risks. For a change that touches a collection, name the largest one and how each new query, loop and list stays bounded.
