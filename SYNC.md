@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-11-06 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-11-16 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills` (แถว AGENTS.md ตรวจ `~/.codex/AGENTS.md`): ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -72,16 +72,15 @@
     <tr><td>codebase-design</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/mattpocock/skills/codebase-design">codebase-design</a></td><td>71</td><td>1,349</td></tr>
     <tr><td>verification-before-completion</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/obra/superpowers/tree/main/skills/verification-before-completion">verification-before-completion</a></td><td>59</td><td>854</td></tr>
     <tr><td>playwright-cli</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/microsoft/playwright-cli/tree/main/skills/playwright-cli">playwright-cli</a></td><td>32</td><td>3,760</td></tr>
-    <tr><td>reverse-engineer-anything</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/morluto/rea">REA</a></td><td>100</td><td>8,425</td></tr>
     <tr><th colspan="7" align="left">ค้นหาเอกสาร</th></tr>
     <tr><td>find-docs</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/upstash/context7/find-docs">find-docs</a></td><td>187</td><td>1,714</td></tr>
     <tr><th colspan="7" align="left">จัดการและสร้าง skill</th></tr>
     <tr><td>find-skills</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/skills/find-skills">find-skills</a></td><td>80</td><td>1,303</td></tr>
     <tr><td>skill-creator</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/anthropics/skills/skill-creator">skill-creator</a></td><td>79</td><td>7,241</td></tr>
     <tr><th colspan="7" align="left">รวม</th></tr>
-    <tr><td colspan="5">รวม skills 29 ตัว</td><td>2,903</td><td>—</td></tr>
+    <tr><td colspan="5">รวม skills 28 ตัว</td><td>2,803</td><td>—</td></tr>
     <tr><td colspan="5">ข้อความครอบ AGENTS และ mapping path</td><td>31</td><td>—</td></tr>
-    <tr><th colspan="5" align="left">รวมทั้งหมด (ประมาณ, o200k_base)</th><th>3,791</th><th>—</th></tr>
+    <tr><th colspan="5" align="left">รวมทั้งหมด (ประมาณ, o200k_base)</th><th>3,691</th><th>—</th></tr>
   </tbody>
 </table>
 
@@ -124,7 +123,6 @@
     <tr><td>codebase-design</td><td>คำศัพท์และหลักออกแบบ deep module: module, interface, seam, adapter (tdd เรียกใช้ตอนต้องเลือกว่าจะวาง seam ตรงไหน)</td><td><code>/codebase-design</code>, ออกแบบหรือปรับ interface ของ module, หาจุดวาง seam, ทำให้โค้ด test ง่ายขึ้น</td></tr>
     <tr><td>verification-before-completion</td><td>บังคับให้รันคำสั่งตรวจและดูผลก่อนบอกว่าเสร็จ แก้แล้ว หรือผ่าน</td><td><code>/verification-before-completion</code>, ก่อนบอกว่างานเสร็จ ก่อน commit หรือเปิด PR</td></tr>
     <tr><td>playwright-cli</td><td>ควบคุม browser, ทดสอบหน้าเว็บ, ตรวจ selector และถ่าย screenshot ผ่าน CLI</td><td><code>/playwright-cli</code>, ทดสอบ flow บนเว็บ, ตรวจหน้าเว็บใน browser, ขอ screenshot</td></tr>
-    <tr><td>reverse-engineer-anything</td><td>วิเคราะห์ย้อนกลับแอป, binary และพฤติกรรม runtime ผ่าน REA (ต้องติดตั้ง REA MCP ก่อน)</td><td><code>/reverse-engineer-anything</code>, ขอ reverse engineer หรือ decompile แอปที่ build แล้ว (ไม่ใช่ source ใน repo)</td></tr>
     <tr><th colspan="3" align="left">ค้นหาเอกสาร</th></tr>
     <tr><td>find-docs</td><td>ดึงเอกสารล่าสุดของ library/CLI/cloud service ผ่าน <code>npx ctx7</code></td><td><code>/find-docs</code>, ถามเรื่อง API, config, migration ของ library ที่ระบุชื่อ</td></tr>
     <tr><th colspan="3" align="left">จัดการและสร้าง skill</th></tr>
@@ -147,7 +145,6 @@
     <tr><td>to-spec, to-tickets</td><td><code>.scratch/&lt;feature&gt;/</code></td><td>เลือก issue tracker แบบไฟล์ local (ถ้าเลือก GitHub/GitLab จะสร้างเป็น issue แทน)</td></tr>
     <tr><td>impeccable</td><td><code>.impeccable/</code>, <code>PRODUCT.md</code>, <code>DESIGN.md</code>, hook config</td><td>ใช้ workflow ออกแบบ, live หรือเปิด hooks</td></tr>
     <tr><td>skill-creator</td><td><code>&lt;skill-name&gt;-workspace/</code>, <code>evals/</code>, <code>*.skill</code></td><td>สร้าง skill, รัน eval หรือ package</td></tr>
-    <tr><td>reverse-engineer-anything</td><td>recovered source, analysis cache, evidence JSON</td><td>recover/export ตามปลายทางที่เลือก</td></tr>
     <tr><td>find-skills</td><td>โฟลเดอร์ skill และไฟล์ติดตั้งของ agent</td><td>ติดตั้งหรือสร้าง skill แบบ project scope</td></tr>
   </tbody>
 </table>
@@ -161,21 +158,9 @@
     <tr><th>MCP</th><th>Claude</th><th>Codex</th><th>ใช้กับ skill</th><th>คำสั่งติดตั้ง</th></tr>
   </thead>
   <tbody>
-    <tr><td>REA</td><td>✅</td><td>✅ (ปิดใช้งาน)</td><td>reverse-engineer-anything</td><td><code>npx -y rea-agents@latest setup --client claude_code --client codex --skill=false</code> (ใช้กับเว็บ/JS ไม่ต้องลง engine เพิ่ม, <code>--skill=false</code> เพราะ skill มาจาก <code>npx skills</code> อยู่แล้ว)</td></tr>
     <tr><td>Context7</td><td>❌</td><td>❌</td><td>—</td><td>ไม่ลง: find-docs ใช้ <code>npx ctx7</code> ได้โดยไม่ต้องมี MCP</td></tr>
   </tbody>
 </table>
-
-### เปิด/ปิด REA ใน Codex
-
-ติดตั้งไว้แต่ปิดเป็นค่าเริ่มต้นด้วย `enabled = false` ใน section `[mcp_servers.rea]` ของ `~/.codex/config.toml` โดยเก็บค่า `command`, `args` และค่าอื่นเดิมไว้
-
-- เมื่อต้องใช้ `reverse-engineer-anything`: เปลี่ยนเป็น `enabled = true` แล้ว restart แอป/extension ที่ใช้งาน หรือเปิด Codex CLI session ใหม่
-- เมื่อใช้เสร็จ: เปลี่ยนกลับเป็น `enabled = false` แล้วโหลด config ใหม่ด้วยวิธีเดียวกัน
-- Skill ไม่ได้เปิด MCP ที่ถูกปิดให้อัตโนมัติ ต้องเปิดก่อนเรียก tools ของ REA
-- Context7 MCP ไม่ได้ติดตั้ง: `find-docs` ใช้ `npx ctx7` ได้โดยไม่ต้องเปิด MCP
-
-อ้างอิง: [OpenAI MCP configuration](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)
 
 ## จัดการ skill
 
