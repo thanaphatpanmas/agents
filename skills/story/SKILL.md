@@ -46,6 +46,7 @@ Stop and tell the user when:
 Then:
 
 - Find the exact commands for unit, integration and e2e tests and for starting the app: `AGENTS.md` or `CLAUDE.md` first, then the package scripts. Subagents get them verbatim. Ask if one is missing
+- Bound each test command: test runs, the app, its database and the agents all share one machine, and uncapped runs freeze it. Cap the runner's workers at 2 (Playwright `--workers=2`, Jest or Vitest `--maxWorkers=2`), and give Playwright `--reporter=line`: its HTML reporter opens a browser after a failure and waits for Ctrl+C. Through a package script, pass the flags after `--` (`npm test -- --workers=2`) or call the runner directly, or they never reach it. When a Playwright project is a regression run of its own (UAT, visual snapshots), select the other projects with `--project` and name the one left out in the report. Every step and brief below uses these bounded commands
 - Add `.story/` to `.git/info/exclude` so working files are never committed. Add Playwright output (`test-results/`, `playwright-report/`, `.playwright-cli/`) too when `.gitignore` doesn't already cover it
 
 ## 2. Get the spec
@@ -97,7 +98,7 @@ Dispatch both subagents in one message (Claude Code: the Agent tool; with `cli`:
 - **E2E agent** (`references/roles/e2e.md`): writes e2e tests from the spec only, inside the Playwright test directory from `playwright.config.*`. If the project has no Playwright setup, ask the user before adding it: it's a new dependency
 - **Dev agent** (`references/roles/dev.md`): builds it with `tdd`, unit and integration tests at the approved seams, and owns every file outside the e2e directory
 
-When both have reported, run the full suite yourself: unit, integration and e2e.
+When both have reported, run the group's tests yourself, one command at a time: the E2E agent's files and the unit and integration test files the Dev agent added or changed. The full suite waits for step 7.
 
 - Failures go back to the same Dev agent with the failing output, continued rather than restarted so it keeps its context (Claude Code: SendMessage; with `cli`: resume its session)
 - A test that contradicts the spec goes back to the agent that wrote it. If the spec doesn't settle who is right, ask the user
@@ -116,10 +117,10 @@ git diff --stat <base>   # every new file should be listed
 
 Dispatch a fresh Security agent with `references/roles/security.md`. Fresh matters: a reviewer that watched the build inherits its blind spots. It reviews `git diff <base>`, starting from the attack surface, using `security-review` (or `best-practices` where that doesn't exist), and writes a failing test for each real finding.
 
-- Send findings to the Dev agent (fix them yourself on a small one) and rerun the suite
+- Send findings to the Dev agent (fix them yourself on a small one) and rerun the group's tests, Security's new ones included
 - A finding that needs a business decision (who may cancel a paid invoice?) goes to the user
 
-Then run `git add -N .` again, for the tests and fixes just added, review the current changes yourself with `code-review` (or `best-practices`), and apply the fixes that keep the suite green.
+Then run `git add -N .` again, for the tests and fixes just added, review the current changes yourself with `code-review` (or `best-practices`), and apply the fixes that keep the group's tests green.
 
 ## 6. Evidence
 
@@ -129,7 +130,7 @@ Look at every screenshot before it goes into a PR: drop any that shows secrets o
 
 ## 7. Ship
 
-1. `verification-before-completion`: run the full suite fresh and read the output before claiming anything passes
+1. `verification-before-completion`: run the full suite fresh, one bounded command at a time, and read the output before claiming anything passes. It is the group's first full run: failures go back to the Dev agent as in step 4 (you fix them on a small one), and a fix that changes what a UI criterion shows gets its screenshot retaken
 2. `commit`
 3. `pull-request`. Tell it the issues to close (one `Closes #<n>` per ticket in the group), give it the evidence table for Testing and the screenshot paths, and have it embed each image under its own criterion with `<AC id> — <criterion>` as alt text: `.story/` is excluded from git, so a path left as text is a dead link, and an unreferenced attachment just piles up at the end of the PR. For a group blocked by the previous one, the base is that group's branch
 
@@ -139,6 +140,6 @@ Keep it short, one block per PR:
 
 - URL, head → base, and the issues it closes
 - acceptance criteria covered by tests, and any that aren't
-- what is still open: findings left for the user, evidence skipped, checks that couldn't run
+- what is still open: findings left for the user, evidence skipped, checks that couldn't run or were left out
 
 Leave `.story/` in place unless the user asks to remove it.

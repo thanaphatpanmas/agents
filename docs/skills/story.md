@@ -1,6 +1,6 @@
 # Story Flow
 
-> **Last updated:** 2026-11-06 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-11-16 Asia/Bangkok (UTC+07:00)
 
 จาก story หรือ task (feature/fix) จนเปิด PR โดย session หลักคุมงานและแบ่งงานให้ subagent ผ่าน skill `/story`
 
@@ -61,7 +61,7 @@ flowchart LR
 
 - **E2E agent**: ใช้ `playwright-cli` เขียน e2e จาก spec อย่างเดียว แก้ได้เฉพาะไฟล์ใน `e2e/`
 - **Dev agent**: ใช้ `tdd` เขียน unit และ integration test ที่ seam ที่ยืนยันแล้ว จนทุก test ผ่าน ห้ามแก้ไฟล์ e2e
-- **Session หลัก**: รัน test ทั้งหมด
+- **Session หลัก**: รัน test ที่งานนี้เพิ่มหรือแก้ทีละคำสั่ง (รันทั้งหมดรอบเดียวตอนส่งงาน)
   - ตัวที่พังส่งกลับไปให้ Dev แก้
   - ถ้าถกกันว่า test ผิดหรือโค้ดผิด ให้ตัดสินจาก spec
   - วนได้ไม่เกิน 3 รอบ เกินนั้นถามคุณ
@@ -91,7 +91,7 @@ flowchart LR
 
 ### 5. ส่งงาน
 
-1. `verification-before-completion`: รัน test ทั้งหมดจริงก่อนบอกว่าเสร็จ
+1. `verification-before-completion`: รัน test ทั้งหมดจริงก่อนบอกว่าเสร็จ เป็นรอบเดียวที่รันทั้งหมด ตัวที่พังส่งกลับให้ Dev แก้เหมือนขั้น 2
 2. `commit`
 3. `pull-request`: แนบ screenshot ด้วย `--attach` และอ้างรูปใน body ด้วย `![alt](./<path>)`
 
@@ -117,6 +117,8 @@ flowchart LR
 - session หลักเป็นตัวคุมงาน เพราะ subagent สร้าง subagent ต่อไม่ได้ และถามคุณไม่ได้
 - ยืนยัน seam กับคุณในขั้น 1 แล้วส่งให้ Dev agent ในสถานะ "ยืนยันแล้ว"
 - แต่ละ agent แก้เฉพาะไฟล์ของตัวเอง และห้ามลบ ข้าม หรือลดความเข้มของ test เพื่อให้ผ่าน
+- คำสั่ง test ทุกตัวจำกัด worker ไว้ที่ 2 (E2E agent ใช้ 1) และ Playwright ใช้ `--reporter=line` เพราะ test ที่รันพร้อมกันหลายชุดทำให้เครื่องค้าง และ HTML reporter จะเปิด browser แล้วรอ Ctrl+C เมื่อมี test พัง project ที่เป็น regression แยก เช่น UAT ไม่ต้องรัน
+- แต่ละ agent รันเฉพาะ test ของตัวเอง: E2E รันไฟล์ของตัวเองรอบเดียว Dev ไม่รัน e2e ส่วน Security รันเฉพาะ test ที่เขียนเพิ่ม
 - แบ่งชนิด test:
   - integration test อยู่กับ Dev
   - test security ระดับ API (สิทธิ์เข้าถึงข้อมูลคนอื่น, validate input) เขียนเป็น integration test

@@ -22,6 +22,7 @@ Use the `security-review` skill, or `best-practices` where it doesn't exist. Che
 
 For each finding you can show, write a failing test that proves it: an integration test for server issues, an e2e test for browser-only issues. Put it beside the existing tests, named `security: <what>`. Don't fix the code. Another agent will, and a test that failed before the fix proves the hole was real.
 
+- Run only the tests you wrote, not the whole suite
 - Report only what the code can actually reach; leave out theory
 - Never send requests to anything but the local app and test database
 - Don't commit, switch branches or install anything

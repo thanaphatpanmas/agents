@@ -10,9 +10,9 @@ You build a feature test-first. The user has approved the spec and its seams, so
 - Spec: `<repo>/.story/<slug>/spec.md`
 - Seams: `<each seam from the spec: the module, endpoint or component, and the interface its tests go through>`
 - Commands: `<unit>`, `<integration>`, `<type-check and lint>`
-- Your files: everything outside `<Playwright test directory>`. Another agent is writing e2e tests there right now from the same spec; read them when a failure points there, but don't edit them
+- Your files: everything outside `<Playwright test directory>`. Another agent is writing e2e tests there right now from the same spec; read them when a failure points there, but don't edit or run them: the main session runs them
 
-Use the `tdd` skill: one behavior at a time, red, green, refactor.
+Use the `tdd` skill: one behavior at a time, red, green, refactor. Run only the test file in hand while you work.
 
 - Unit and integration tests at the seams above, through their public interfaces
 - The server side of the attack surface as integration tests: another user's or tenant's records, a missing permission, invalid input, an action in the wrong state
@@ -21,7 +21,7 @@ Use the `tdd` skill: one behavior at a time, red, green, refactor.
 - Use these skills when the work calls for them: `codebase-design` (shaping a module), `debug-mantra` (a failure you can't explain), `find-docs` (library APIs), `typescript-magician`, `vercel-react-best-practices`, `vercel-composition-patterns`, `supabase-postgres-best-practices`, `modern-web-guidance`, `impeccable` (UI and accessibility)
 - Never delete, skip or loosen a test to make it pass. If a test looks wrong, leave it and explain in your reply
 - Don't commit, switch branches, or add dependencies. If you need a package, say which one and why
-- Done when unit, integration, type-check and lint all pass
+- Done when unit, integration, type-check and lint all pass, each run once in full at the end
 
 You may get follow-up messages with failing tests or security findings. Fix the code, or explain why the test contradicts the spec, and reply in the same format.
 

@@ -52,7 +52,7 @@ env -i HOME="$HOME" USER="$USER" PATH="$PATH" TERM=dumb \
 ```
 
 - **Clean environment**: `env -i` keeps the main session's own variables (its session, its effort) away from the CLI, so it runs under its own login and settings. Add by name any variable the project's commands need. Never add `--model`, `--effort` or `-m`: the user picks those in each CLI
-- **Permissions**: nobody can answer a prompt in a headless run. `acceptEdits` lets `claude` edit files in the repo, and each `Bash(<command> *)` rule allows one command the role's brief names: unit, integration, type-check, lint, e2e, starting the app. E2E and Evidence also get `"Bash(playwright-cli *)"`. Anything else that would prompt is refused. Never pass a flag that skips permissions or the sandbox
+- **Permissions**: nobody can answer a prompt in a headless run. `acceptEdits` lets `claude` edit files in the repo, and each `Bash(<command> *)` rule allows one command the role's brief names, written with the flags the brief gives it so a run without its worker cap is refused: unit, integration, type-check, lint, e2e, starting the app. E2E and Evidence also get `"Bash(playwright-cli *)"`. Anything else that would prompt is refused. Never pass a flag that skips permissions or the sandbox
 - **Waiting**: a role can take many minutes. Run the command in the background and wait for it to exit (Claude Code: Bash with `run_in_background`), E2E and Dev at the same time
 - **Reply**: `<role>.out.md` holds the reply in the format the brief asks for. On a non-zero exit or an empty file, read `<role>.log`. A CLI that is out of quota or logged out is the user's to fix: stop and tell them
 - **Record**: write each role's CLI into `progress.md`, with the session id of every `claude` session
