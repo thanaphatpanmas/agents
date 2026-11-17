@@ -20,7 +20,7 @@ Use the `playwright-cli` skill when it's available. Read one or two existing e2e
 - Select by role and accessible name from the Selectors table (`getByRole`, `getByLabel`). No CSS classes or DOM paths, and test ids only where the spec lists them
 - Assert what the Then line says a user sees, not internals
 - Cover browser risks introduced or affected by this change, such as untrusted text rendering or a changed role's route access; do not audit unrelated pages
-- Include screenshot capture at the planned visible states using the project's existing test conventions, so the passing run can also supply PR evidence. Avoid screenshot assertions unless the project already requires them for this behavior
+- Include screenshot capture at the planned visible states using the project's existing test conventions, so the passing run can also supply PR evidence. Annotate each capture as `evidence.md` describes (red rings with numbered notes, red `<AC id> — <criterion>` caption bar), with the repo's annotation helper when it has one. Avoid screenshot assertions unless the project already requires them for this behavior
 - Return the files for execution after Dev yields the slot. Do not claim red or green without execution; spec-based test writing remains independent of the implementation
 - If the spec is unclear or a name is missing, take the most likely reading, note it and carry on; nobody can answer questions while you work
 - Don't commit, switch branches or install anything

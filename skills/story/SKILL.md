@@ -140,15 +140,21 @@ Then run `git add -N .` again if files were added and review the final diff and 
 
 ## 6. Evidence
 
-Skip this when nothing in the UI changed. Otherwise capture evidence during the planned browser verification, preferably from the passing test or the same live session. Use `references/roles/evidence.md` for the capture rules, whether the main session or an agent captures it. Reuse current screenshots and map multiple criteria to the same image where it proves them. Dispatch an Evidence agent only for missing or invalid evidence substantial enough to justify a separate handoff; give it only those gaps.
+Screenshots do three jobs: the user sees the finished result, each image shows exactly what changed and where, and once the user confirms them they go into the PR so the reviewer sees what it does. Skip screenshots only when nothing in the UI changed; every UI change gets them, on every route. Criteria a screenshot can't show still get evidence, below.
 
-Look at every selected screenshot before it goes into a PR: exclude secrets/personal data and replace stale or misleading captures. Plain screenshots with descriptive PR captions are sufficient; image annotations are optional unless requested. When later fixes change a visible state, recapture that state during the affected check rather than replaying every criterion.
+Capture during the planned browser verification, preferably from the passing test or the same live session. Use `references/roles/evidence.md` for the capture rules, whether the main session or an agent captures it. Every screenshot is annotated: a red ring with a short numbered note on each element that proves the criterion, and a red caption bar reading `<AC id> — <criterion>`. Use the repo's own annotation helper when it has one, adding the caption bar to it if it lacks one; otherwise draw the overlay with `playwright-cli` `eval`. One screenshot may prove several criteria when it clearly does; its caption names each.
+
+Criteria a screenshot can't show (API responses, permissions, stored data, migrations, background jobs, browser storage) need evidence the reviewer can read instead: the passing test that proves each one, plus a short text sample from a real run against test data — a trimmed request and response, a before/after query result, the stored value, or the log line or record a job created. Strip tokens, passwords and personal data. A criterion backed only by reading the code says so; one with neither a test nor a sample is reported as unverified, never as done.
+
+Dispatch an Evidence agent only for missing or invalid evidence substantial enough to justify a separate handoff; give it only those gaps.
+
+Look at every screenshot yourself first: exclude secrets/personal data, and replace stale captures or ones whose ring, note or caption marks the wrong spot. Then show the user the screenshots (Claude Code: `SendUserFile`; otherwise list the paths) together with the evidence table and the text samples, and wait for their confirmation before step 7; recapture or rerun what they ask to change. Never open the PR with evidence the user hasn't confirmed. When later fixes change a visible state, recapture that state and show it again.
 
 ## 7. Ship
 
 1. `verification-before-completion`: the main session owns the final verification plan from step 3. Run its commands against the final code, one at a time, and read the actual output before claiming success. A check already run by the main session after the last relevant edit can count; a summary from an agent alone cannot. Run the full suite when required by the repo/user or when shared changes cannot be covered reliably by scoped checks. Follow `references/verification.md` for invalidating results after edits, handling failures and reporting checks not run
 2. `commit`
-3. `pull-request`. Tell it the real tracker issues to close (one `Closes #<n>` per ticket in the group; local ticket numbers are not tracker issues), give it the evidence table for Testing and the screenshot paths, and have it embed each image under its own criterion with `<AC id> — <criterion>` as alt text: `.story/` is excluded from git, so a path left as text is a dead link, and an unreferenced attachment just piles up at the end of the PR. For a group blocked by the previous one, the base is that group's branch
+3. `pull-request`. Tell it the real tracker issues to close (one `Closes #<n>` per ticket in the group; local ticket numbers are not tracker issues), give it the evidence table for Testing, the confirmed screenshot paths and text samples, and have it put each piece under its own criterion: a visible `<AC id> — <criterion>` line, then the image (the same text as alt text) or the sample in a code block: `.story/` is excluded from git, so a path left as text is a dead link, and an unreferenced attachment just piles up at the end of the PR. For a group blocked by the previous one, the base is that group's branch
 
 ## 8. Report
 

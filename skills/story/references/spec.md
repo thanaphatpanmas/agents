@@ -21,7 +21,7 @@ One per observable behavior. Number them in order across the whole spec so tests
   - Then the request is refused and the invoice is unchanged
 ```
 
-- `ui`: observable in the interface; choose automated or manual browser verification according to the risk and test plan. Important journeys and browser-only behavior may need e2e coverage. Reuse screenshots across criteria when the same visible state proves them. `api`: server behavior, tested at its appropriate public boundary; a screenshot cannot prove it
+- `ui`: observable in the interface; choose automated or manual browser verification according to the risk and test plan. Important journeys and browser-only behavior may need e2e coverage. Reuse screenshots across criteria when the same visible state proves them. `api`: server behavior, tested at its appropriate public boundary; a screenshot cannot prove it, so its evidence is that test plus a short text sample (SKILL.md step 6)
 - Then lines describe what someone could check from outside: text on screen, a response, a stored record. Not "the function is called"
 - The source in brackets: a ticket, or a user story number when there are no tickets
 
