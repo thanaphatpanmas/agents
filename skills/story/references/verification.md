@@ -32,7 +32,7 @@ When a test fails, distinguish a behavior regression from app startup, fixture o
 
 ## Capture evidence during verification
 
-For UI changes, use the same browser pass to verify behavior and capture its relevant visible states. Save selected screenshots under `.story/<slug>/screenshots/` before ephemeral test output is cleared. Use `roles/evidence.md` for the required annotation, evidence quality and reporting, and show the screenshots to the user for confirmation before the PR. Existing captures remain usable only while the relevant code, test state and viewport still match; a screenshot is not proof of an API assertion.
+For UI changes, use the same browser pass to verify behavior and capture its relevant visible states. Save selected screenshots under `.story/<slug>/screenshots/` before ephemeral test output is cleared. Use `roles/evidence.md` for the required annotation, evidence quality and reporting, and show the screenshots to the user for confirmation before the PR. Existing captures remain usable only while the relevant code, test state and viewport still match; a screenshot is not proof of an API assertion. With a before/after comparison, the before side is a browser run of its own on the base code, taken by the main session right after branching while no other role holds the slot; the after side comes from the same pass as the evidence.
 
 ## Measure the phases
 

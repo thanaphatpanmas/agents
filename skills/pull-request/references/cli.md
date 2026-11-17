@@ -38,7 +38,7 @@ EOF
 
 - **Screenshots**: add `--attach ./<path>` per file to the create or update command. Commands run from the repo, so `<path>` is relative to it. If the CLI rejects the flag (`gh` before 2.99, an older `glab`), leave it off and list the files in the report so the user can drag them into the PR
   - **GitHub**: also place each image in the description as `![alt](./<path>)`, the same path as its `--attach`; `gh` replaces it with the uploaded URL. If some uploads fail, `gh` still creates or updates the PR and exits non-zero: don't run it again, and list the failed files in the report
-  - **GitLab**: `glab` appends each file to the description itself (the flag is experimental there), so don't reference them in the body
+  - **GitLab**: `glab` uploads each file and appends its link to the end of the description (the flag is experimental there). When images belong under particular sections, such as each acceptance criterion, write the body with a placeholder where each image goes, create or update with `--attach`, then read the uploaded links from `glab mr view <n> --output json` (`description`, lines like `![name](/uploads/<hash>/<file>)`). Update the description with each placeholder replaced by its link and the appended list removed, and check that every link appears exactly once. Otherwise leave the appended list as it is
 - **Reviewers, assignees, labels**: only when the user names them (`--reviewer`, `--assignee`, `--label` on both CLIs)
 
 ## Delete branch after merge

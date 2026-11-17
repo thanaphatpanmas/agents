@@ -7,7 +7,7 @@ description: >-
   sensitive changes. Coordinate missing planning, focused verification and reusable
   UI evidence. Resume without repeating approved work. Run by the user as /story.
   Not for reviewing someone else's PR or merging.
-argument-hint: "[idea | task list | #issue | issue URL | spec path | small change] [#more-issues] [cli]"
+argument-hint: "[idea | task list | #issue | issue URL | spec path | small change] [#more-issues] [cli] [compare | no-compare]"
 disable-model-invocation: true
 ---
 
@@ -66,6 +66,8 @@ Then:
 
 Record the route, risk and reason in `progress.md` and tell the user briefly; choosing a route is not an extra approval gate. Reclassify if exploration or a requirement change expands the impact. With `cli`, check only CLIs for roles actually being dispatched, immediately before they are needed.
 
+**Decide on a before/after comparison** at the same time: the same pages or runs on the base code and on the branch, side by side, so the reviewer sees what the change did to behavior that already exists. Turn it on for a fix or change to existing behavior or display, and for a refactor that must keep its output (the pair then shows nothing changed). Leave it off for a new page or feature, where the before side has nothing to show, and for a one-line copy or style edit, where its single AC screenshot is enough. `compare` / `no-compare` in the request, or asking in words, overrides this. Record the choice with the route and mention it to the user.
+
 ## 2. Get the spec
 
 Read `references/planning.md`. The input decides which work is missing:
@@ -95,7 +97,7 @@ If the request or spec references tickets you can't find, ask for their numbers 
 
 ## 3. Plan verification and ownership
 
-Read `references/verification.md`. Record the checks, their scope, owner and why they cover the change, plus the browser states needed as evidence. Honor repo/user-required checks on every route. Prefer the existing test boundary that proves the behavior; do not automatically require unit, integration and e2e coverage of the same behavior.
+Read `references/verification.md`. Record the checks, their scope, owner and why they cover the change, plus the browser states needed as evidence and, with the comparison on, the pages or runs to compare. Honor repo/user-required checks on every route. Prefer the existing test boundary that proves the behavior; do not automatically require unit, integration and e2e coverage of the same behavior.
 
 For new non-trivial behavior and bug fixes, use `tdd` at the approved seam. For trivial copy/style edits, use the relevant existing checks and a visual check rather than inventing tests that mirror the edit. For a dialog, verify opening/closing, keyboard/focus behavior and any changed submit/error path. Add e2e tests for important journeys or browser-only behavior when lower-level tests cannot establish it; preserve existing relevant regression coverage.
 
@@ -106,6 +108,8 @@ Branch first; `commit` never creates a branch. Pull the base and branch from it:
 ```bash
 git switch -c <type>/<issue>-<short-name> <base>   # type: feat or fix; a group uses its first ticket's number
 ```
+
+With the comparison on, capture its before side now, before the first edit, while the branch still equals the base (`references/roles/evidence.md`, "Before/after comparison"). Taken later, it means pulling the base code back out from under the work.
 
 Use a real issue number when one exists so `pull-request` can add `Closes #<n>`. For a small fix or local spec without tracker issues, use `<type>/<short-name>` and omit issue-closing directives. Carry this run's recorded setup changes into its branch and delivery; if switching or updating the base would overwrite them, stop and resolve that with the user.
 
@@ -146,15 +150,17 @@ Capture during the planned browser verification, preferably from the passing tes
 
 Criteria a screenshot can't show (API responses, permissions, stored data, migrations, background jobs, browser storage) need evidence the reviewer can read instead: the passing test that proves each one, plus a short text sample from a real run against test data — a trimmed request and response, a before/after query result, the stored value, or the log line or record a job created. Strip tokens, passwords and personal data. A criterion backed only by reading the code says so; one with neither a test nor a sample is reported as unverified, never as done.
 
+With the comparison on, capture the after side with the same script, data, steps and marks as the before side, and pair each page or run (`references/roles/evidence.md`, "Before/after comparison").
+
 Dispatch an Evidence agent only for missing or invalid evidence substantial enough to justify a separate handoff; give it only those gaps.
 
-Look at every screenshot yourself first: exclude secrets/personal data, and replace stale captures or ones whose ring, note or caption marks the wrong spot. Then show the user the screenshots (Claude Code: `SendUserFile`; otherwise list the paths) together with the evidence table and the text samples, and wait for their confirmation before step 7; recapture or rerun what they ask to change. Never open the PR with evidence the user hasn't confirmed. When later fixes change a visible state, recapture that state and show it again.
+Look at every screenshot yourself first: exclude secrets/personal data, and replace stale captures or ones whose ring, note or caption marks the wrong spot. Then show the user the screenshots and before/after pairs (Claude Code: `SendUserFile`; otherwise list the paths) together with the evidence table and the text samples, and wait for their confirmation before step 7; recapture or rerun what they ask to change. Never open the PR with evidence the user hasn't confirmed. When later fixes change a visible state, recapture that state and show it again.
 
 ## 7. Ship
 
 1. `verification-before-completion`: the main session owns the final verification plan from step 3. Run its commands against the final code, one at a time, and read the actual output before claiming success. A check already run by the main session after the last relevant edit can count; a summary from an agent alone cannot. Run the full suite when required by the repo/user or when shared changes cannot be covered reliably by scoped checks. Follow `references/verification.md` for invalidating results after edits, handling failures and reporting checks not run
 2. `commit`
-3. `pull-request`. Tell it the real tracker issues to close (one `Closes #<n>` per ticket in the group; local ticket numbers are not tracker issues), give it the evidence table for Testing, the confirmed screenshot paths and text samples, and have it put each piece under its own criterion: a visible `<AC id> — <criterion>` line, then the image (the same text as alt text) or the sample in a code block: `.story/` is excluded from git, so a path left as text is a dead link, and an unreferenced attachment just piles up at the end of the PR. For a group blocked by the previous one, the base is that group's branch
+3. `pull-request`. Tell it the real tracker issues to close (one `Closes #<n>` per ticket in the group; local ticket numbers are not tracker issues), give it the evidence table for Testing, the confirmed screenshot paths and text samples, and have it put each piece under its own criterion: a visible `<AC id> — <criterion>` line, then the image (the same text as alt text) or the sample in a code block: `.story/` is excluded from git, so a path left as text is a dead link, and an unreferenced attachment just piles up at the end of the PR. Confirmed before/after pairs follow the criteria under their own heading, each under its caption, collapsed when there are many. For a group blocked by the previous one, the base is that group's branch
 
 ## 8. Report
 

@@ -41,7 +41,9 @@ Depends on #12, which must merge first.    stacked PRs only
 - Not tested: ...
 
 ## Screenshots                             UI changes only
-![Settings page after saving](./<path>)    GitHub: one per image, same path as its `--attach` (cli.md); GitLab: none, glab appends them
+![Settings page after saving](./<path>)    GitHub: one per image, same path as its `--attach`; GitLab: placed after upload (cli.md)
+### Before / after                         only when pairs were supplied: caption, then the image or the text pair (table or diff)
+<details><summary>13 pairs</summary>      collapse when there are more than a few
 
 ## Notes                                   only when needed: migrations, config, risks, follow-ups
 
