@@ -1,6 +1,6 @@
 ---
 name: pull-request
-description: Open or update a GitHub pull request or GitLab merge request (including self-hosted) for the current branch, choosing the base from the commit graph (main, dev, or a stacked parent) and writing a Conventional Commits title and reviewer-ready description from the whole branch. Use when the user asks, in any language, to open, create or update a PR or MR, ask for review, or runs /pull-request. Not for committing, merging or reviewing PRs.
+description: Open or update a GitHub pull request or GitLab merge request (including self-hosted) for the current branch, choosing the base from the commit graph, checking conflicts and resolving clear ones before push, and writing a Conventional Commits title and reviewer-ready description from the whole branch. Use when the user asks, in any language, to open, create or update a PR or MR, ask for review, or runs /pull-request. Not for standalone commits, merging or reviewing PRs.
 argument-hint: "[project name or path] [base branch] [draft|ready] [delete-branch] [notes for the description]"
 ---
 
@@ -13,6 +13,7 @@ Reply to the user in their language; write the title and description in English 
 | Reference | Read at |
 | --- | --- |
 | `references/base-branch.md`: how the base is chosen and checked | step 3 |
+| `references/integration.md`: branch synchronization, conflict checks and resolution | step 4 |
 | `references/cli.md`: every `gh` / `glab` command, and CLI setup | steps 2, 3, 5, 8 |
 | `references/templates.md`: title and description rules, sizes, examples | step 6 |
 
@@ -29,7 +30,7 @@ A branch name in the request is the base the user wants, `draft` / `ready` set t
 ## 2. Gather the facts
 
 ```bash
-git -C <repo> fetch --prune <remote>   # usually origin; if it fails (offline), continue and say so
+git -C <repo> fetch --prune <remote>   # usually origin; on failure, only prepare text and report the failed fetch
 python3 <skill-dir>/scripts/pr_context.py <repo> [--base <branch>]   # --base only when the user named one
 ```
 
@@ -37,7 +38,7 @@ The JSON gives the branch and its push state, `platform` (`github`, `gitlab`, `u
 
 Stop and tell the user, without trying to fix it, when the script exits with an error, `in_progress` is set (finish the merge or rebase first), or `base.suggested` is null (nothing to review).
 
-- `uncommitted_files` above 0: ask whether to commit first (with the `commit` skill) or open the PR without them. Don't stage anything yourself
+- `uncommitted_files` above 0: ask whether to commit first (with the `commit` skill) or open the PR without them. Don't stage user changes, stash them or integrate branches over them; if integration is needed, wait for a clean worktree
 - `platform: unknown`: ask whether the host is GitHub or GitLab
 - the needed CLI missing or not logged in: give the setup from `cli.md`, and offer to write the title and description for pasting into the web form at `web_url`
 
@@ -45,15 +46,21 @@ Stop and tell the user, without trying to fix it, when the script exits with an 
 
 Find an open PR from this branch (`cli.md`, "Find PRs"): if one exists, this run updates it instead of opening a duplicate. Then settle the base with `references/base-branch.md`: stacked bases, ambiguous ones and promotion PRs each need a check before you trust the suggestion.
 
-## 4. Push the branch
+Resolve an ambiguous base before any integration or push; don't defer this decision to step 7.
+
+## 4. Prepare and push the branch
+
+Follow `references/integration.md` before pushing: synchronize with the same-named remote branch, then check conflicts against the settled base. Merge is the default when integration is needed; use rebase only under the conditions in that reference. Resolve conflicts without asking when code, tests and requirements establish the intended result; ask before choosing between different behaviors. Promotion PRs need a separate decision before integrating the base backwards.
+
+After integration, rerun `pr_context.py <repo> --base <base>` and use the refreshed push counts. Don't push with unresolved conflicts, an unfinished operation or failed required checks.
 
 The PR is built from what is on the remote. The counts compare with `<remote>/<branch>`, not the upstream, because `git checkout -b feat origin/main` tracks `main`:
 
+- `push.behind` above 0 → return to synchronization in `references/integration.md` before either push command below
 - `push.remote_branch_exists` or `push.tracks_remote_branch` false → `git -C <repo> push -u <remote> <branch>`
 - `push.unpushed` above 0 → `git -C <repo> push <remote> <branch>`
-- `push.behind` above 0 → never force-push: stop, and offer `git -C <repo> pull --rebase <remote> <branch>`, run only if they agree
 
-Any other rejection (authentication, protected branch): show the error and stop.
+Never force-push. If a concurrent update rejects the push, fetch again and repeat synchronization, conflict checks and verification; if updates keep racing, report it and stop. Any other rejection (authentication, protected branch): show the error and stop.
 
 ## 5. Read the whole branch
 
@@ -65,7 +72,7 @@ git -C <repo> diff --stat <remote>/<base>...HEAD
 git -C <repo> diff <remote>/<base>...HEAD
 ```
 
-Also gather: 3–5 recently merged PRs, to match language and shape (`cli.md`, "Recent merged PRs"); the repo template listed in `templates`, whose sections replace the standard ones; and what was actually tested in this session or by CI, including screenshots of UI changes.
+Also gather: 3–5 recently merged PRs, to match language and shape (`cli.md`, "Recent merged PRs"); the repo template listed in `templates`, whose sections replace the standard ones; and what was actually tested in this session or by CI, including screenshots of UI changes. Include material conflict resolutions and checks run after integration; earlier checks alone don't verify the integrated result.
 
 ## 6. Write the title and description
 
@@ -76,13 +83,13 @@ Follow `references/templates.md`. The title is a Conventional Commits subject, s
 Ask one question, with AskUserQuestion if available (otherwise in chat, and wait). Each option's preview shows the full title and description, and its label names the direction, e.g. "Open PR: `feature/b` → `dev`":
 
 - **Open as ready for review** / **Open as draft**, or **Update PR #12** for an existing one (say if the state or base would change, and whether the source branch will be deleted after merge)
-- When the base is ambiguous or looked wrong, ask for it in the same call, recommended branch first
+- If the user changes the base during preview, return to steps 3–5 before creating
 
 Skip the question only when the request set `draft` / `ready` and the base is certain. If the user edits the text, revise and ask again; if they cancel, nothing is created.
 
 ## 8. Create or update
 
-Run the create or update command from `cli.md`, passing the description through a temporary file. Attach screenshots where the CLI can. With `delete-branch`, also set delete-after-merge (`cli.md`, "Delete branch after merge"). Never merge, approve, enable auto-merge, close, or delete branches yourself. If the command fails, show the error and stop.
+Run the create or update command from `cli.md`, passing the description through a temporary file. Attach screenshots where the CLI can. With `delete-branch`, also set delete-after-merge (`cli.md`, "Delete branch after merge"). Never merge a PR/MR, approve, enable auto-merge, close, or delete branches yourself; local branch integration in step 4 is separate. If the command fails, show the error and stop.
 
 ## 9. Report
 

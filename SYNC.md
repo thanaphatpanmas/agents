@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-11-16 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-11-17 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills` (แถว AGENTS.md ตรวจ `~/.codex/AGENTS.md`): ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -33,7 +33,9 @@
 - **Tokens เริ่มต้น**: name + description ที่ agent โหลดทุก session
 - **Tokens เมื่อเรียกใช้**: `SKILL.md` ทั้งไฟล์ โหลดเมื่อ skill ถูกเรียก (ไม่รวม references ที่อ่านเพิ่มตามขั้นตอน)
 - นับด้วย o200k_base (ประมาณ)
-- `grill-me`, `to-spec`, `to-tickets`, `setup-matt-pocock-skills`, `story` ตั้ง `disable-model-invocation: true` ไว้: Claude ไม่โหลด description ของ 5 ตัวนี้ตอนเริ่ม session และเรียกได้เฉพาะตอนพิมพ์ `/ชื่อ` ตัวเลขในตารางยังนับตามวิธีเดิม
+- `story` ยังตั้ง `disable-model-invocation: true` ให้ผู้ใช้เป็นคนเริ่ม ส่วน `grill-me`, `to-spec`, `to-tickets`, `setup-matt-pocock-skills` เปิดให้ agent เรียกเพื่อประสาน flow: เอา `disable-model-invocation: true` ออก และตั้ง `agents/openai.yaml` → `policy.allow_implicit_invocation: true`
+- สี่ skill วางแผนเป็นแพ็กเกจภายนอกที่แก้ใน `~/.agents/skills` บนเครื่องนี้: ปรับ description ให้ใช้เมื่อผู้ใช้ขอหรือ `story` ต้องการขั้นนั้น และให้ `grill-me` อ่าน `grilling/SKILL.md` ได้เมื่อไม่มี Skill tool การติดตั้งหรืออัปเดตแพ็กเกจอาจทับการปรับนี้ ให้ตรวจสองค่า invocation ข้างต้นและเงื่อนไขการเรียกอีกครั้ง
+- ต้นฉบับ `story` อยู่ใน `skills/story/`; สำเนาที่ใช้งานอยู่ใน `~/.agents/skills/story/` ต้องคัดลอกไฟล์ที่แก้ตามด้วย ตัวเลข token ในตารางเป็นค่าประมาณจากรอบก่อนปรับ flow
 
 <table>
   <thead>
@@ -94,14 +96,14 @@
   </thead>
   <tbody>
     <tr><th colspan="3" align="left">วางแผนและจัดการงาน</th></tr>
-    <tr><td>grill-me</td><td>สัมภาษณ์เป็นรอบจน plan หรือ story ชัด (เรียก <code>grilling</code> ให้เอง)</td><td><code>/grill-me</code> เท่านั้น</td></tr>
+    <tr><td>grill-me</td><td>สัมภาษณ์เป็นรอบจน plan หรือ story ชัด (เรียก <code>grilling</code> ให้เอง)</td><td><code>/grill-me</code>, ผู้ใช้ขอขั้นตอนนี้ หรือ <code>story</code> เรียกเมื่อจำเป็น</td></tr>
     <tr><td>grilling</td><td>ถามเป็นรอบ ทุกคำถามมีคำตอบที่แนะนำ หาข้อเท็จจริงในโค้ดเองผ่าน subagent จนไม่เหลือเรื่องที่ต้องเดา</td><td><code>/grilling</code>, พูดว่า &quot;grill&quot;, ขอให้ซักแผนหรือไอเดีย</td></tr>
-    <tr><td>to-spec</td><td>เขียน spec จากที่คุยกันมา ร่าง seam ให้ยืนยัน แล้วลง issue tracker</td><td><code>/to-spec</code> เท่านั้น</td></tr>
-    <tr><td>to-tickets</td><td>แตก spec หรือแผนเป็น ticket แบบ vertical slice พร้อมลำดับที่ต้องรอกัน แล้วลง issue tracker</td><td><code>/to-tickets</code> เท่านั้น</td></tr>
-    <tr><td>setup-matt-pocock-skills</td><td>ตั้งค่า repo ให้ <code>to-spec</code> และ <code>to-tickets</code>: issue tracker (GitHub, GitLab หรือไฟล์ local), label และที่เก็บเอกสาร domain</td><td><code>/setup-matt-pocock-skills</code> เท่านั้น รันครั้งเดียวต่อ repo</td></tr>
-    <tr><td>story</td><td>พา spec จาก <code>to-spec</code> (หรืองานแก้เล็กๆ) ไปจนเปิด PR: เติม acceptance criteria ให้ E2E agent กับ Dev agent ทำพร้อมกัน ให้ Security agent ตัวใหม่หาช่องโหว่ ถ่าย screenshot ตาม criteria แล้ว commit + PR ทีละกลุ่ม ticket (ขั้นตอนอยู่ใน <code>docs/skills/story.md</code>)</td><td><code>/story #&lt;issue&gt;</code> หรือ <code>/story &lt;สิ่งที่จะแก้&gt;</code> เท่านั้น</td></tr>
+    <tr><td>to-spec</td><td>เขียน spec จากที่คุยกันมา ร่าง seam ให้ยืนยัน แล้วลง issue tracker</td><td><code>/to-spec</code>, ผู้ใช้ขอขั้นตอนนี้ หรือ <code>story</code> เรียกเมื่อจำเป็น</td></tr>
+    <tr><td>to-tickets</td><td>แตก spec หรือแผนเป็น ticket แบบ vertical slice พร้อมลำดับที่ต้องรอกัน แล้วลง issue tracker</td><td><code>/to-tickets</code>, ผู้ใช้ขอขั้นตอนนี้ หรือ <code>story</code> เรียกเมื่อจำเป็น</td></tr>
+    <tr><td>setup-matt-pocock-skills</td><td>ตั้งค่า repo ให้ <code>to-spec</code> และ <code>to-tickets</code>: issue tracker (GitHub, GitLab หรือไฟล์ local), label และที่เก็บเอกสาร domain</td><td><code>/setup-matt-pocock-skills</code>, ผู้ใช้ขอตั้งค่า หรือ <code>story</code> พบว่าขาด tracker ที่จำเป็น</td></tr>
+    <tr><td>story</td><td>พาไอเดีย, task list, spec เดิมหรืองานแก้เล็กๆ ไปจนเปิด PR: ประสาน setup, clarification, spec และ tickets เฉพาะที่ขาด บันทึกสถานะตั้งแต่วางแผน เลือกเส้นทางตามขอบเขต/ความเสี่ยงก่อนทำ spec งานเล็กทำใน session หลัก แบ่ง agent เฉพาะงานอิสระ ตรวจ security แยกเมื่องานเสี่ยง จัดคิวคำสั่งหนักและเก็บภาพระหว่างตรวจ UI แล้ว commit + PR ทีละกลุ่ม ticket (ขั้นตอนอยู่ใน <code>docs/skills/story.md</code>)</td><td><code>/story &lt;ไอเดียหรืองานแก้&gt;</code>, <code>/story #&lt;issue&gt;</code> หรือ <code>/story &lt;spec path&gt;</code></td></tr>
     <tr><td>commit</td><td>stage ทุกไฟล์ใน repo ปัจจุบันหรือโปรเจกต์ที่ระบุ commit แบบ Conventional Commits จาก diff แล้วให้เลือก commit อย่างเดียวหรือ commit + push</td><td><code>/commit</code>, &quot;commit and push&quot;, สั่ง commit/push เป็นภาษาไหนก็ได้</td></tr>
-    <tr><td>pull-request</td><td>เปิดหรืออัปเดต PR (GitHub) / MR (GitLab รวม self-hosted) ของ branch ปัจจุบัน เลือก base จากผัง commit (main, dev, branch แม่ของ stacked) เขียนชื่อแบบ Conventional Commits และคำอธิบายจากทุก commit แล้วถามก่อนสร้าง (ต้องมี <code>gh</code>/<code>glab</code>)</td><td><code>/pull-request</code>, เปิด PR, สร้าง MR, ขอ merge, ส่งรีวิว</td></tr>
+    <tr><td>pull-request</td><td>เปิดหรืออัปเดต PR (GitHub) / MR (GitLab รวม self-hosted) ของ branch ปัจจุบัน เลือก base จากผัง commit ตรวจ conflict ก่อน push ใช้ merge เป็นค่าเริ่มต้นเมื่อจำเป็น แก้จุดที่เจตนาชัดได้เลยและถามก่อนตัดสินพฤติกรรม เขียนชื่อแบบ Conventional Commits และคำอธิบายจากทุก commit แล้วถามก่อนสร้าง (ต้องมี <code>gh</code>/<code>glab</code>)</td><td><code>/pull-request</code>, เปิด PR, สร้าง MR, ขอ merge, ส่งรีวิว</td></tr>
     <tr><td>workload</td><td>สรุป git commit และ PR ตามช่วงวันที่เป็น workload รายสัปดาห์ บรรทัดละงาน ไม่ใส่เวลาหรือชั่วโมง วันที่ไม่มี commit จะเดาจากงานรอบข้างแล้วติด <code>(?)</code> ไว้ให้ตรวจ</td><td><code>/workload</code>, ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, ส่ง week ที่มีช่อง <code>[]</code> ว่าง</td></tr>
     <tr><td>short-notes</td><td>เขียน/แก้โน้ตส่วนตัว Markdown สไตล์ bullet + code เลือกภาษาไทย/อังกฤษ และระดับ brief/medium/detailed</td><td><code>/short-notes</code>, ขอจด/บันทึก/สรุปลงโน้ต, เพิ่มหรือเขียนโน้ต .md เดิมใหม่</td></tr>
     <tr><th colspan="3" align="left">ออกแบบและพัฒนา Frontend</th></tr>

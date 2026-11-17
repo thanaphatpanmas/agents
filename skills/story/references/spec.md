@@ -21,7 +21,7 @@ One per observable behavior. Number them in order across the whole spec so tests
   - Then the request is refused and the invoice is unchanged
 ```
 
-- `ui`: a user can see it, so it gets an e2e test and a screenshot. `api`: server behavior, covered by integration tests
+- `ui`: observable in the interface; choose automated or manual browser verification according to the risk and test plan. Important journeys and browser-only behavior may need e2e coverage. Reuse screenshots across criteria when the same visible state proves them. `api`: server behavior, tested at its appropriate public boundary; a screenshot cannot prove it
 - Then lines describe what someone could check from outside: text on screen, a response, a stored record. Not "the function is called"
 - The source in brackets: a ticket, or a user story number when there are no tickets
 
@@ -67,9 +67,9 @@ Only when there are tickets. One PR per group of tickets that change the same ar
 | 2 | #126 | cancel paid invoices | 1 | feat/126-cancel-paid-invoice |
 ```
 
-## Short spec for a small fix
+## Short spec for a small low-risk change
 
-No `/to-spec` issue, so write the whole thing to `.story/<slug>/spec.md`. Use the issue number in `<slug>` when there is one, otherwise just the short name.
+No `/to-spec` issue, so write the whole thing to the existing `.story/<slug>/spec.md`. Keep the folder chosen when planning started, even if an issue was created later.
 
 ```markdown
 # <What changes>

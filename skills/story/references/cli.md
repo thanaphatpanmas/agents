@@ -1,6 +1,6 @@
 # Agent CLIs
 
-Only with `cli`. Each role runs as a headless session of one of the user's agent CLIs instead of a subagent, under that CLI's own login, model and effort, so the work is spread over more than one account. The briefs, who owns which files and every rule in `SKILL.md` stay the same; only how a role is dispatched and continued changes.
+Only with `cli`. Roles selected by Story run as headless sessions of the user's agent CLIs instead of subagents, under that CLI's own login, model and effort. This does not add roles to the small route. The briefs, file ownership and shared execution slot from `verification.md` stay the same; only dispatch and continuation change.
 
 ## Who gets what
 
@@ -18,7 +18,7 @@ When a CLI is left out, because the user asked for only one or the check below f
 
 ## Check the CLIs
 
-At step 1:
+Before dispatching a needed role, check its CLI only (skip unused CLIs):
 
 ```bash
 env -i HOME="$HOME" USER="$USER" PATH="$PATH" TERM=dumb claude auth status   # "loggedIn": true
@@ -52,10 +52,10 @@ env -i HOME="$HOME" USER="$USER" PATH="$PATH" TERM=dumb \
 ```
 
 - **Clean environment**: `env -i` keeps the main session's own variables (its session, its effort) away from the CLI, so it runs under its own login and settings. Add by name any variable the project's commands need. Never add `--model`, `--effort` or `-m`: the user picks those in each CLI
-- **Permissions**: nobody can answer a prompt in a headless run. `acceptEdits` lets `claude` edit files in the repo, and each `Bash(<command> *)` rule allows one command the role's brief names, written with the flags the brief gives it so a run without its worker cap is refused: unit, integration, type-check, lint, e2e, starting the app. E2E and Evidence also get `"Bash(playwright-cli *)"`. Anything else that would prompt is refused. Never pass a flag that skips permissions or the sandbox
-- **Waiting**: a role can take many minutes. Run the command in the background and wait for it to exit (Claude Code: Bash with `run_in_background`), E2E and Dev at the same time
+- **Permissions**: nobody can answer a prompt in a headless run. `acceptEdits` lets `claude` edit files in the repo, and each `Bash(<command> *)` rule allows one command the role's brief names, written with the flags the brief gives it so a run without its worker cap is refused: unit, integration, type-check, lint, e2e, starting the app. Only a role with the execution slot and browser work gets `"Bash(playwright-cli *)"`; an author-only E2E role gets no shell permissions to run tests or open a browser. Anything else that would prompt is refused. Never pass a flag that skips permissions or the sandbox
+- **Waiting**: run long commands in the background and wait for completion (Claude Code: Bash with `run_in_background`). Dev and E2E may author in parallel when both roles are justified, but only Dev has the execution slot; E2E returns unrun tests. Do not grant author-only roles Bash permissions to start apps or run checks
 - **Reply**: `<role>.out.md` holds the reply in the format the brief asks for. On a non-zero exit or an empty file, read `<role>.log`. A CLI that is out of quota or logged out is the user's to fix: stop and tell them
-- **Record**: write each role's CLI into `progress.md`, with the session id of every `claude` session
+- **Record**: write each role's CLI and `claude` session id into `progress.md`, with dispatch/completion timestamps and elapsed duration
 
 ## Continue
 
