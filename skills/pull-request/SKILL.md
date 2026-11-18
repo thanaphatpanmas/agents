@@ -1,7 +1,7 @@
 ---
 name: pull-request
 description: Open or update a GitHub pull request or GitLab merge request (including self-hosted) for the current branch, choosing the base from the commit graph, checking conflicts and resolving clear ones before push, and writing a Conventional Commits title and reviewer-ready description from the whole branch. Use when the user asks, in any language, to open, create or update a PR or MR, ask for review, or runs /pull-request. Not for standalone commits, merging or reviewing PRs.
-argument-hint: "[project name or path] [base branch] [draft|ready] [delete-branch] [notes for the description]"
+argument-hint: "[project name or path] [base branch] [draft|ready] [reviewer names] [delete-branch|keep-branch] [notes for the description]"
 ---
 
 # Pull Request
@@ -14,7 +14,7 @@ Reply to the user in their language; write the title and description in English 
 | --- | --- |
 | `references/base-branch.md`: how the base is chosen and checked | step 3 |
 | `references/integration.md`: branch synchronization, conflict checks and resolution | step 4 |
-| `references/cli.md`: every `gh` / `glab` command, and CLI setup | steps 2, 3, 5, 8 |
+| `references/cli.md`: every `gh` / `glab` command, and CLI setup | steps 2, 3, 5, 7, 8 |
 | `references/templates.md`: title and description rules, sizes, examples | step 6 |
 
 ## 1. Pick the project
@@ -25,7 +25,7 @@ The project comes first in the request: `/pull-request web-app dev draft`. With 
 python3 <skill-dir>/scripts/find_repo.py <name>
 ```
 
-A branch name in the request is the base the user wants, `draft` / `ready` set the PR state, `delete-branch` (or asking in words to delete the branch after merge) turns on deleting the source branch when the PR merges, and other words are notes for the description. Below, `<repo>` is the project's path; pass it to every git command with `-C`.
+A branch name in the request is the base the user wants, `draft` / `ready` set the PR state, people named as reviewers or assignees answer those questions in step 7, `delete-branch` / `keep-branch` (or saying in words whether to delete the branch after merge) answers the delete question, and other words are notes for the description. Below, `<repo>` is the project's path; pass it to every git command with `-C`.
 
 ## 2. Gather the facts
 
@@ -72,7 +72,7 @@ git -C <repo> diff --stat <remote>/<base>...HEAD
 git -C <repo> diff <remote>/<base>...HEAD
 ```
 
-Also gather: 3–5 recently merged PRs, to match language and shape (`cli.md`, "Recent merged PRs"); the repo template listed in `templates`, whose sections replace the standard ones; and what was actually tested in this session or by CI, including screenshots of UI changes. Include material conflict resolutions and checks run after integration; earlier checks alone don't verify the integrated result.
+Also gather: 3–5 recently merged PRs, to match language and shape and to see who usually reviews (`cli.md`, "Recent merged PRs"); the repo template listed in `templates`, whose sections replace the standard ones; and what was actually tested in this session or by CI, including screenshots of UI changes. Include material conflict resolutions and checks run after integration; earlier checks alone don't verify the integrated result.
 
 ## 6. Write the title and description
 
@@ -80,17 +80,19 @@ Follow `references/templates.md`. The title is a Conventional Commits subject, s
 
 ## 7. Ask before creating
 
-Ask one question, with AskUserQuestion if available (otherwise in chat, and wait). Each option's preview shows the full title and description, and its label names the direction, e.g. "Open PR: `feature/b` → `dev`":
+Ask in one AskUserQuestion call with up to four questions (otherwise in chat, and wait). Skip a question the request already answered (State only when the base is also certain); for an existing PR, show its current reviewers, assignees and delete setting as the first option of each.
 
-- **Open as ready for review** / **Open as draft**, or **Update PR #12** for an existing one (say if the state or base would change, and whether the source branch will be deleted after merge)
-- If the user changes the base during preview, return to steps 3–5 before creating
+1. **State**: each option's preview shows the full title and description, and its label names the direction, e.g. "Open PR: `feature/b` → `dev`": **Open as ready for review** / **Open as draft**, or **Update PR #12** for an existing one (say if the state or base would change)
+2. **Reviewers** (multi-select): up to three people who reviewed recent merged PRs, excluding the author, plus **No reviewer**; the user can type other names
+3. **Assignee**: **Same as reviewers** / **Me** / **None**
+4. **Delete source branch after merge**: **No** / **Yes**, GitLab only. GitHub has no per-PR setting: don't ask, and state the repo-wide setting in the preview (`cli.md`, "Delete branch after merge")
 
-Skip the question only when the request set `draft` / `ready` and the base is certain. If the user edits the text, revise and ask again; if they cancel, nothing is created.
+Typed names are checked against the host before creating (`cli.md`, "Reviewers and assignees"). If the user changes the base during preview, return to steps 3–5 before creating. If the user edits the text, revise and ask again; if they cancel, nothing is created.
 
 ## 8. Create or update
 
-Run the create or update command from `cli.md`, passing the description through a temporary file. Attach screenshots where the CLI can. With `delete-branch`, also set delete-after-merge (`cli.md`, "Delete branch after merge"). Never merge a PR/MR, approve, enable auto-merge, close, or delete branches yourself; local branch integration in step 4 is separate. If the command fails, show the error and stop.
+Run the create or update command from `cli.md`, passing the description through a temporary file. Attach screenshots where the CLI can. Pass the reviewers and assignees chosen in step 7, and set delete-after-merge to the answer (`cli.md`, "Delete branch after merge"). Never merge a PR/MR, approve, enable auto-merge, close, or delete branches yourself; local branch integration in step 4 is separate. If the command fails, show the error and stop.
 
 ## 9. Report
 
-Keep it short: the PR URL, `head` → `base`, ready or draft; for a stacked PR, which PR must merge first; what the user still has to do (screenshots to drag in, a base you chose, checks you couldn't run); the full text only if they didn't see it in step 7.
+Keep it short: the PR URL, `head` → `base`, ready or draft, reviewers, assignees and whether the branch is deleted after merge; for a stacked PR, which PR must merge first; what the user still has to do (screenshots to drag in, a base you chose, checks you couldn't run); the full text only if they didn't see it in step 7.
