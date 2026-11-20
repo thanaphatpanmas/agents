@@ -1,12 +1,12 @@
 ---
 name: workload
-description: Review the user's git commits and pull requests over a date range and write their weekly workload log in their own template (Month → Week → Day → `[Module/Sub-Module] Task`), one line per piece of work with no times or hours, inferring and flagging days without commits. Use whenever the user asks, in Thai or English, to check/review what they committed in a period, write or fill a workload, timesheet, work log, or ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, or pastes a partly filled week with empty `[]` slots — even if they don't say "workload".
+description: Review the user's git commits and pull requests over a date range and write their weekly workload log (Month → Week → Day → `(2h) [Module/Sub-Module] Task`) with estimated whole hours per task. Use whenever the user asks, in Thai or English, to check what they committed, write or fill a workload, timesheet, work log, or ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, or pastes a partly filled week — even if they don't say "workload".
 argument-hint: "[project names or paths] [date range]"
 ---
 
 # Workload from Commits
 
-The user submits a weekly workload log. Their commits (written with the `commit` skill) and pull requests (written with the `pull-request` skill) are the evidence of what they did each day; this skill turns them into entries in their exact format. Entries carry no time slots or hours: the user adds those themselves. Read `references/example.md` once before writing: it is the standard every output must match, including the "Not like this" mistakes to avoid.
+The user submits a weekly workload log. Use commits and pull requests to identify what they did each day and estimate whole hours per task. Read [the workload example](references/example.md) before writing.
 
 ## 1. Find the projects, the range and the draft
 
@@ -14,7 +14,7 @@ A typical request: `/workload web-app and mobile-app from 12 to 22 Oct`.
 
 - **Projects**: the names (or paths) the user lists, each one passed as `--repo`. The script looks a name up as a git repo folder under the home directory, matching loosely (`mobile-app` = `Mobile App` = `mobile_app`). If it reports no match or several matches, ask the user for the path. If no project is named, use the current repo.
 - **Range**: from the request or the pasted draft's week header. A date without a year means this year, or last year if that date would still be in the future. Weeks run Monday → Sunday. When the range starts or ends mid-week, the week header still shows the full Monday–Sunday dates, but write only the days inside the range.
-- **Draft**: if the user pasted a partly filled week, that draft is the skeleton. Keep every line they already wrote verbatim (meetings, UAT, leave, `Nothing`, and any times they added) and fill only the empty `[]` slots. Their manual entries record things git can't see.
+- **Draft**: keep the user's existing lines verbatim, including meetings, UAT, leave, `Nothing`, time slots, and hours. Fill empty days or `[]` slots. If they ask to add hours to a supplied list, add only the missing hour prefixes and preserve task text, order, and any hours already recorded.
 
 ## 2. Collect commits
 
@@ -58,21 +58,28 @@ With several projects, the reader must still tell them apart. The first project 
 - comma-separated verbs/nouns: `CRUD`, `Test, Fix, Detail`, `Re-Design, Query Optimization`
 - one short past-tense phrase: `Added order export to Excel`
 
-The whole entry must fit on one line: keep the task to about 8 words / 60 characters. If one piece of work covered several things, name the main one, or split it into separate lines. Never cram them into one task. No commit hashes, `type(scope):` prefixes, file names or parentheses (the `(?)` flag in step 5 is the only exception).
+The whole entry must fit on one line. Keep the task to about 8 words / 60 characters. If one piece of work covered several things, name the main one, or split it into separate lines. Keep commit hashes, `type(scope):` prefixes, file names, and parenthetical explanations out of the task text.
 
-**Lines per day**: one line per distinct piece of work, in the order it was done, usually 1–4 lines. Several commits on the same feature share one line; one big commit splits into a few lines along its body's area labels or bullets when it covers clearly separate features. A follow-up `Test, Fix, Detail` line fits when the day's commits are tests and fixes on that feature. Don't pad a day with invented work: the user sets the hours.
+**Lines per day**: one line per distinct piece of work, in the order it was done, usually 1–4 lines. Several commits on the same feature share one line; one big commit splits into a few lines along its body's area labels or bullets when it covers clearly separate features. A follow-up `Test, Fix, Detail` line fits when the day's commits are tests and fixes on that feature. Include only work supported by the draft or repository evidence.
 
 ## 5. Days without commits: infer, then flag
 
-The user often commits once at the end of a session that ran longer than a day, so a commit's time is when the work was saved, not when it started. A weekday with no commits (and no draft entry) usually holds part of the work in the next commit after it.
+The user normally commits each task soon after finishing. Infer work on an empty weekday only when nearby commits or PR evidence support work spanning the gap.
 
-- Look at the next commit after the gap and its PR. If it is big, its body lists several parts, or its PR's commits or branch show the work started earlier, put the likely part of it on the empty day: split along the body's area labels (`API:` on the empty day, `Web:` on the commit day), or, if it won't split, the main build on the empty day and `Test, Fix, Detail` on the commit day. Never repeat the same line on both days.
+- Look at the next commit after the gap and its PR for signs of earlier work, such as dated notes or branch activity. When the evidence supports a split, assign distinct parts to each day. Commit size alone does not establish that a task started earlier.
 - Work left unfinished before the gap (a `wip` commit, a feature whose PR came later) can also continue into it.
-- End every inferred line with ` (?)`: `[Sales/Promotion/Flash Sale] Database, API (?)`. The user checks these before submitting.
+- End every inferred line with ` (?)`, for example `(2h) [Sales/Promotion/Flash Sale] Database, API (?)`. The user checks these before submitting.
 - Write `Nothing` only when nothing on either side points to the day (leave, a holiday, or work outside git).
 - Weekend days appear only when they have commits or draft entries; don't infer work onto them.
 
-## 6. Output format
+## 6. Estimate hours
+
+- Treat each distinct task's relevant commit author time as an approximate finish time. Use the gap from the preceding distinct task's finish within the same workday as a clue when tasks appear sequential. Account for known breaks, manual entries, or overlapping work. Ignore duplicate, squash, merge, and by-product timestamps when the original task commits are available. Keep the before-05:00 workday rule when comparing timestamps.
+- For the first or only task of a day, or when commits cluster or have long gaps, estimate from the diff, the implementation and testing involved, and similar tasks. If one commit covers multiple entries, or a task spans multiple days, split the estimate across those entries. Count shared effort once. Use a daily hour budget only if the user supplies one.
+- Pick a plausible range internally, round its midpoint to the nearest whole hour (half hours round up), and use at least 1 hour for each generated task. Output one number per task. Preserve the user's own hours and time slots verbatim. If the user asks for entries without hours, omit generated prefixes.
+- Keep any day totals the user requests consistent with the displayed entries. In the notes, label generated hours as estimates and call out any particularly uncertain allocations.
+
+## 7. Output format
 
 Put the result in one fenced `text` block, ready to paste:
 
@@ -80,17 +87,17 @@ Put the result in one fenced `text` block, ready to paste:
 June 2026
 Week 1 (01/06/2026 - 07/06/2026)
 Day 1 (01/06/2026)
-[Sales/Order/Order List] CRUD, Filter, Pagination
-[Sales/Order/Order Detail] Status Timeline, Print Receipt
+(3h) [Sales/Order/Order List] CRUD, Filter, Pagination
+(2h) [Sales/Order/Order Detail] Status Timeline, Print Receipt
 Day 2 (02/06/2026)
-[Sales/Order/Order Export] Database, API (?)
+(2h) [Sales/Order/Order Export] Database, API (?)
 Day 3 (03/06/2026)
-[Sales/Order/Order Export] Export Button, Excel Format
+(2h) [Sales/Order/Order Export] Export Button, Excel Format
 ```
 
 - Month header (`October 2026`) only when the range starts a month or the user's draft has one. A week belongs to the month of its Monday, and `Week N` means the Nth Monday of that month.
 - Dates are `dd/mm/yyyy`, zero-padded. `Day N` is the weekday number (Mon = 1 … Sun = 7), so Saturday is always Day 6 even when earlier days are missing.
-- Each entry line starts with its tag: no `- [ ]` checkbox, no bullet.
+- Start each generated entry with `(Nh)` followed by its tag. Use a positive integer for `N`. Keep generated entries free of clock-time slots, bullets, and checkboxes.
 - A week with no work at all: the week header followed by `Nothing`.
 - Blank line between weeks.
 

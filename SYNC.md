@@ -1,6 +1,6 @@
 # Agent Setup
 
-> **Last updated:** 2026-11-17 Asia/Bangkok (UTC+07:00)
+> **Last updated:** 2026-11-20 Asia/Bangkok (UTC+07:00)
 
 `~/.agents` คือที่เก็บหลัก (`npx skills` ลง skill ที่นี่) Claude ใช้ symlink ใน `~/.claude/skills` ส่วนคอลัมน์ Codex ตรวจเฉพาะ `~/.codex/skills` (แถว AGENTS.md ตรวจ `~/.codex/AGENTS.md`): ❌ = ไม่มีไฟล์/symlink (ที่ถูกต้อง), ✅ = มี symlink หลุดเข้ามา ทั้งที่ Codex เห็น skill ผ่าน `~/.agents/skills` เองอยู่แล้ว
 
@@ -53,7 +53,7 @@
     <tr><td>story</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/story">story</a></td><td>115</td><td>2,445</td></tr>
     <tr><td>commit</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/commit">commit</a></td><td>116</td><td>1,940</td></tr>
     <tr><td>pull-request</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/pull-request">pull-request</a></td><td>115</td><td>1,581</td></tr>
-    <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td><td>149</td><td>2,528</td></tr>
+    <tr><td>workload</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/workload">workload</a></td><td>123</td><td>2,646</td></tr>
     <tr><td>short-notes</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/thanaphatpanmas/agents/tree/main/skills/short-notes">short-notes</a></td><td>148</td><td>1,032</td></tr>
     <tr><th colspan="7" align="left">ออกแบบและพัฒนา Frontend</th></tr>
     <tr><td>design-taste-frontend</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://github.com/Leonxlnx/taste-skill">taste-skill</a></td><td>199</td><td>5,507</td></tr>
@@ -80,9 +80,9 @@
     <tr><td>find-skills</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/vercel-labs/skills/find-skills">find-skills</a></td><td>80</td><td>1,303</td></tr>
     <tr><td>skill-creator</td><td>✅</td><td>✅ (symlink)</td><td>❌</td><td><a href="https://skills.sh/anthropics/skills/skill-creator">skill-creator</a></td><td>79</td><td>7,241</td></tr>
     <tr><th colspan="7" align="left">รวม</th></tr>
-    <tr><td colspan="5">รวม skills 28 ตัว</td><td>2,803</td><td>—</td></tr>
+    <tr><td colspan="5">รวม skills 28 ตัว</td><td>2,777</td><td>—</td></tr>
     <tr><td colspan="5">ข้อความครอบ AGENTS และ mapping path</td><td>31</td><td>—</td></tr>
-    <tr><th colspan="5" align="left">รวมทั้งหมด (ประมาณ, o200k_base)</th><th>3,691</th><th>—</th></tr>
+    <tr><th colspan="5" align="left">รวมทั้งหมด (ประมาณ, o200k_base)</th><th>3,665</th><th>—</th></tr>
   </tbody>
 </table>
 
@@ -104,7 +104,7 @@
     <tr><td>story</td><td>พาไอเดีย, task list, spec เดิมหรืองานแก้เล็กๆ ไปจนเปิด PR: ประสาน setup, clarification, spec และ tickets เฉพาะที่ขาด บันทึกสถานะตั้งแต่วางแผน เลือกเส้นทางตามขอบเขต/ความเสี่ยงก่อนทำ spec งานเล็กทำใน session หลัก แบ่ง agent เฉพาะงานอิสระ ตรวจ security แยกเมื่องานเสี่ยง จัดคิวคำสั่งหนักและเก็บภาพระหว่างตรวจ UI แล้ว commit + PR ทีละกลุ่ม ticket (ขั้นตอนอยู่ใน <code>docs/skills/story.md</code>)</td><td><code>/story &lt;ไอเดียหรืองานแก้&gt;</code>, <code>/story #&lt;issue&gt;</code> หรือ <code>/story &lt;spec path&gt;</code></td></tr>
     <tr><td>commit</td><td>stage ทุกไฟล์ใน repo ปัจจุบันหรือโปรเจกต์ที่ระบุ commit แบบ Conventional Commits จาก diff แล้วให้เลือก commit อย่างเดียวหรือ commit + push</td><td><code>/commit</code>, &quot;commit and push&quot;, สั่ง commit/push เป็นภาษาไหนก็ได้</td></tr>
     <tr><td>pull-request</td><td>เปิดหรืออัปเดต PR (GitHub) / MR (GitLab รวม self-hosted) ของ branch ปัจจุบัน เลือก base จากผัง commit ตรวจ conflict ก่อน push ใช้ merge เป็นค่าเริ่มต้นเมื่อจำเป็น แก้จุดที่เจตนาชัดได้เลยและถามก่อนตัดสินพฤติกรรม เขียนชื่อแบบ Conventional Commits และคำอธิบายจากทุก commit แล้วถามก่อนสร้าง พร้อมถาม reviewer, assignee และการลบ branch หลัง merge ทุกครั้ง (ต้องมี <code>gh</code>/<code>glab</code>)</td><td><code>/pull-request</code>, เปิด PR, สร้าง MR, ขอ merge, ส่งรีวิว</td></tr>
-    <tr><td>workload</td><td>สรุป git commit และ PR ตามช่วงวันที่เป็น workload รายสัปดาห์ บรรทัดละงาน ไม่ใส่เวลาหรือชั่วโมง วันที่ไม่มี commit จะเดาจากงานรอบข้างแล้วติด <code>(?)</code> ไว้ให้ตรวจ</td><td><code>/workload</code>, ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, ส่ง week ที่มีช่อง <code>[]</code> ว่าง</td></tr>
+    <tr><td>workload</td><td>สรุป git commit และ PR ตามช่วงวันที่เป็น workload รายสัปดาห์ บรรทัดละงาน พร้อมประมาณชั่วโมงเต็มต่องาน เช่น <code>(2h) [Module] Task</code> (เก็บชั่วโมงที่ผู้ใช้ใส่เองไว้ตามเดิม) วันที่ไม่มี commit จะเดาจากหลักฐานรอบข้างแล้วติด <code>(?)</code> ไว้ให้ตรวจ</td><td><code>/workload</code>, ลงเวลา/ลงงาน/สรุปงานประจำสัปดาห์, ส่ง week ที่มีช่อง <code>[]</code> ว่าง</td></tr>
     <tr><td>short-notes</td><td>เขียน/แก้โน้ตส่วนตัว Markdown สไตล์ bullet + code เลือกภาษาไทย/อังกฤษ และระดับ brief/medium/detailed</td><td><code>/short-notes</code>, ขอจด/บันทึก/สรุปลงโน้ต, เพิ่มหรือเขียนโน้ต .md เดิมใหม่</td></tr>
     <tr><th colspan="3" align="left">ออกแบบและพัฒนา Frontend</th></tr>
     <tr><td>design-taste-frontend</td><td>สร้างเว็บบริษัท สินค้า หรือร้านค้าไม่ให้ดู generic (v2.5): เขียน copy ก่อน วางหน้าเป็นจอ สุ่ม palette และ hero ด้วย script แล้วตรวจใน headless Chrome (ต้องมี Node 22+ และ Chrome) ไม่ครอบคลุม dashboard/หน้าแอปแล้ว (ใช้ <code>impeccable</code>)</td><td><code>/design-taste-frontend</code>, สร้าง/รีดีไซน์ landing page, เว็บบริษัท สินค้า ร้านค้า SaaS หรือเกม, บอกว่าหน้าดู generic/&quot;AI-made&quot;</td></tr>
